@@ -137,10 +137,7 @@ Metodologia
 ~~~~~~~~~~~
 Para melhor se desenvolver o trabalho nas aulas, deve-se
 seguir uma metodologia de organização de ficheiros em diretórios
-por aulas e por exercícios. Assim, recomenda-se consultar mais tarde um documento
-a disponibilizar on-line para uma descrição mais detalhada dos procedimentos:
-`Metodologias_Exercicios_PARI.pdf`; porém, fica desde já a indicação
-que cada aula deve estar numa pasta separada `Aula1`, `Aula2`, etc.
+por aulas e por exercícios.
 
 Dentro de cada aula, em especial nas primeiras, é também recomendado criar uma
 subpasta para cada exercício `Ex1`, `Ex2`, etc. Em certas aulas, ou aulas mais
@@ -152,8 +149,8 @@ Editor
 ~~~~~~
 A ferramenta principal para criar e modificar ficheiros é o editor, muitas
 vezes integrado num ambiente de desenvolvimento (IDE). Há inúmeras opções
-desde simples editores (`gedit`, `kate`, etc.) até ambientes de
-desenvolvimento muito sofisticados (`codeblocks`, `eclipse`, etc.).
+desde simples editores (`gedit`, `kate`, `kwrite`, etc.) até ambientes de
+desenvolvimento muito sofisticados (`codeblocks`, `eclipse`, `vscode`, etc.).
 
 Além das propriedades fundamentais dos editores, hoje em dia são excelentes
 _add-ons_ a "automated completion" (preenchimento automático de palavras
@@ -168,164 +165,120 @@ permite todas as facilidades indicadas acima, mas a sua configuração,
 por ser praticamente ilimitada, pode-se tornar complexa e, por isso,
 contraproducente em utilizadores iniciados.
 
-Assim, recomenda-se como alternativa uma solução aberta disponibilizada
+Recomenda-se como IDE o https://www.jetbrains.com/pycharm/[pycharm]. Pode-se utilizar a licença profissional ou a licença base. Os estudantes podem solicitar acesso à https://www.jetbrains.com/community/education/#students[licença profissional].
+
+Outra alternativa uma solução disponibilizada
 pela Microsoft para muitas plataformas, incluindo linux. Trata-se do 'Visual Studio Code' ou 'vscode'.
 Pode ser instalado diretamente do gestor de aplicações do Ubuntu ('Ubuntu
 Software') ou por outras vias (https://askubuntu.com/questions/616075/how-do-i-install-visual-studio-code).
 
-Configuração do 'vscode'
-~~~~~~~~~~~~~~~~~~~~~~~~
-O 'vscode' pode ser configurado de muitas formas e existem inúmeras extensões.
-
-A primeira recomendação, embora seja uma quetão pessoal, é que se ajuste o
-sistema de cores ('color theme') para facilitar a visualização e manipulação
-do texto e realce da sintaxe. Há várias formas de o fazer (pelos menus, pela
-página de 'welcome', icon de configurações no canto inferior esquerdo).
-O tema "Solarized Light" pode ser uma boa opção por oposição a temas mais escuros
-que vêm por defeito.
-
-A seguir recomendam-se algumas extensões dedicadas à edição de código C/C{plus}{plus}.
-As mais úteis podem ser:
-
-* C/C{plus}{plus} for Visual Studio Code (C/C{plus}{plus} IntelliSense, debugging, and code browsing).
-* C/C{plus}{plus} Clang Command aDapter (Completion and Diagnostic).
-
-Para as instalar basta fazer uma busca nas "Extensions" no icon do painel do
-lado esquerdo da janela principal, ou então usar menus (View->Extensions) ou
-aceleradores de teclado (Ctrl+Shift+X). NO fim de se localizar a extensão
-pretendida pode-se instala-la seguindo as instruções locais ("Install") ou se
-já estiver instalada pode-se desinstallar ("Uninstall") ou ativar/desativar
-("Enable/Disable")
-
-Há outra extensões úteis em outras fases dos trabalhos, e as seguintes são
-exemplos das inumeras possibilidades:
-
-* Doxygen Documentation Generator (para gerar comentários automáticos em formato Doxygen)
-* Better Comments  (para destacar visualmente comentários pela sua tipologia)
-
-Este editor `vscode` é na verdade mais do que um simples editor, e além de permitir
-muitas janelas e organizações do ecran (`layout`), permite ter janelas com
-terminais de comando (menu Terminal) e até permite lançar comandos
-personalizáveis. Porém, em prol de desenvolvimentos futuros, como na
-programação profissional, devem-se ter soluções mais abertas e não
-vinculadas a um ecossistema fechado, como são alguns IDEs proprietários.
-Por isso, nesta UC de PARI, não se exploram IDEs específicos e limitados,
-mas antes se promove o uso separado de algumas ferramentas, deixando a opção
-por um determinado IDE a eventuais profissionalizações futuras!
-
-Parte 4 - Primeiros exercícios de programação em C
---------------------------------------------------
+Parte 4 - Primeiros exercícios de programação em Python
+-------------------------------------------------------
 
 Exercício 1
 ~~~~~~~~~~~
 
 Desenvolver um programa que imprima no terminal a frase "Hello World".
-Editar o ficheiro `hello.c` com o editor escolhido (`gedit`, `kate`, etc.)
+Editar o ficheiro `hello.py` com o editor escolhido (`gedit`, `kate`, etc.)
 
-.hello.c
-[source,C]
+.hello.py
+[source,Python]
 ----------------------------
-#include <stdio.h>
-int main()
-{
-    printf("Hello World\n");
-    return 0;
-}
+def main():
+    print("Hello World!")
+
+if __name__ == "__main__":
+    main()
 ----------------------------
 
-Compilar o programa com o seguinte comando: 
+executar o programa com o seguinte comando:
 
-    gcc hello.c -o hello
+    python ex1.py
 
 Exercício 2
 ~~~~~~~~~~~
 Criar um programa designado `primos` que imprime no ecran 
 números primos, um por linha, até um certo limite.
-Usar um `#define` e usar uma função auxiliar `isprime()`
+Usar uma função auxiliar `isPrime()`
 que aceita um inteiro `n` e retorna 1 ou 0 conforme `n`
 for primo ou não.
 
-.primo.c
-[source,C]
+.primo.py
+[source,Python]
 ----------------------------------
-#include <stdio.h>
-#define NN 10000
+maximum_number = 50
 
-int isprime(int); //function prototype
 
-int main()
-{
-    int n;
-    for(n=2;n < NN; n++)
-    {
-        if( isprime(n) )
-        {
-            printf("%d\n", n);
-        }
-    }
-    return 0;
-}
+def isPrime(value):
+    # <Fill the blank>
 
-int isprime(int n)
-{
-    int k;
-    for(k=2; k<n; k++)
-    {
-        // fill the appropriate code ...
-        return 0;  // not prime!
-    }
-    return 1;  //if reached here, n is not prime
-}
+
+def main():
+    print("Starting to compute prime numbers up to " + str(maximum_number))
+
+    for i in range(0, maximum_number):
+        if isPrime(i):
+            print('Number ' + str(i) + ' is prime.')
+        else:
+            print('Number ' + str(i) + ' is not prime.')
+
+if __name__ == "__main__":
+    main()
 ----------------------------------
 
 Com a ajuda do programa, calcular quantos números primos 
 inferiores a 10000 têm o algarismo 3.
 
-    primos | grep "3" | wc -l
+    python primos.py | grep "3" | wc -l
 
 A resposta deve ser 561
+
+
 
 Exercício 3
 ~~~~~~~~~~~
 Calcular números perfeitos (aqueles cuja soma dos divisores igualam o número)
 como por exemplo 6 = 3 + 2 + 1.
-Além do `main()` criar a função `long sumDiv(long)`
-que retorna a soma dos divisores de um número.
+Além do `main()` criar as funções `getDividers()`
+que retorna uma lista dos divisores de um número e `isPerfect()`, que indica se o número é perfeito.
 
-Usar uma `Makefile` e ter o `main()` separado das restantes funções
-em dois ficheiros distintos.
- 
-.Makefile
-[source,makefile]
+.perfeitos.py
+[source,Python]
 ----------------------------------
-#My source files
-SRC=main.c myf.c
-PROG=perf
-################################
-CC=gcc
-CFLAGS=-Wall
-OBJ=$(SRC:.c=.o)
-################################
-$(PROG): $(OBJ)
-	gcc $(OBJ) -o $(PROG) -lm
+maximum_number = 100
 
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+def getDividers(value):
+    dividers = []
 
-clean:
-	rm -f $(PROG) $(OBJ)
+    # <Fill the blanks>
+
+    return dividers
+
+
+def isPerfect(value):
+    # <Fill the blanks>
+    return False
+
+def main():
+    print("Starting to compute perfect numbers up to " + str(maximum_number))
+
+    for i in range(0, maximum_number):
+        if isPerfect(i):
+            print('Number ' + str(i) + ' is perfect.')
+
+
+if __name__ == "__main__":
+    main()
 ----------------------------------
 
-[WARNING]
-.TABs nas Makefiles
-=========================================================
-As ações associadas aos targets na `Makefile` devem 
-começar sempre com um `TAB`.
-=========================================================
+Exercício 4
+~~~~~~~~~~~
+Estender o exercício 2 de modo a:
 
-Para compilar e linkar o programa basta fazer:
-
-    make
+    . Imprimir todos os divisores calculados para os números não primos;
+    . Usar o package colorama para imprimir os números primos a verde;
+    . Usar um argumento de linha de comandos para definir o número máximo a testar;
+    . Usar _shebang line_ para simplificar execução do script;
 
 
 // vim: set syntax=asciidoc:
