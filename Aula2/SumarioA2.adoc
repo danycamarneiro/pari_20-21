@@ -1,0 +1,728 @@
+Aula 2 - PARI, Sumário e Exercícios, 25 Set 2019
+================================================
+Vitor Santos <vitor@ua.pt>
+v5.0, Sep. 2019
+
+// Instruções especiais para o asciidoc usar icons no output
+:icons: html5
+:iconsdir: /etc/asciidoc/images/icons
+
+
+.Sumário
+-------------------------------------------------------------
+Primeiros programas em C (continuação)
+Ainda o cálculo de números primos
+Ciclos (for, while e do-while)
+Uso de funções
+Introdução aos comentários Doxygen
+Separação em ficheiros distintos
+Compilar os ficheiros separados e criar executáveis  
+Source code e object code. Header files e protótipos
+Uso de Makefiles
+Editores (pycharm e sua configuração)
+-------------------------------------------------------------
+
+Algumas notas em resumo da aula anterior
+----------------------------------------
+
+[NOTE]
+=========================================================================
+.Informação sobre os ficheiros SumarioA1.adoc, SumarioA2.adoc, SumarioA3.adoc, etc.
+Tal como referido na aula anterior, estes ficheiros de Sumários são legíveis
+no formato ASCII, mas podem ser convertidos em HTML para uma melhor
+apresentação usando o comando `asciidoc`. Para usufruir desta
+facilidade, intalar o `asciidoc` e o `source-highlight`:
+
+  sudo apt install asciidoc
+  sudo apt install source-highlight
+
+Depois basta fazer `asciidoc SumarioA2.adoc` na linha de comando e gera-se o
+ficheiro `SumarioA2.html` que pode ser visualizado num qualquer browser, como o firefox.
+Se se usar a opção `-a data-uri` o ficheiro HTML gerado inclui todas
+as imagens e outros elementos multimédia no próprio ficheiro HTML, o que
+pode ser prático para efeitos de portabilidade do documento:
+`asciidoc -a data-uri SumarioA2.adoc`.
+
+=========================================================================
+
+[NOTE]
+=========================================================================
+O editor recomendado para o desenvolvimento de código ao longo das aulas 
+é o `vscode`. As configurações de defeito podem ser mudadas e várias extensões
+podem ser instaladas, como referido na aula anterior. Se porventura se
+pretender voltar rapidamente às configurações originais de instalação,
+basta eliminar (ou renomear) os seguintes diretórios:
+
+* `~/.vscode`       (local one estão as configurações pessoais de cores, etc.)
+* `~/.Config/Code`  (local onde estão instaladas extensões)
+
+Pode ser útil ter um terminal aberto associado à janela do editor `vscode`.
+Para isso basta seguir os menus: `Terminal` -> `New Terminal`
+
+Nas versões mais recentes o programa chama-se `code` em substituição de `vscode`.
+Se porventura o comando `vscode` deixar de funcionar, usar o comando `code`.
+
+=========================================================================
+
+
+[NOTE]
+=========================================================================
+Para o PATH contemplar o diretório corrente e assim poder-se executar
+os programas compilados sem ter de especificar o seu `path` completo, deve-se
+alterar a variável de ambiente PATH. Isso pode ser feito no terminal com o
+seguinte comando:
+
+* export PATH=./:$PATH
+
+Porém, para tornar este efeito definitivo e não apenas válido na sessão
+em curso, recomenda-se colocar esta instrução no ficheiro de configuração do
+programa da **shell**, que é a **bash**. Assim, pode-se editar o ficheiro
+`.bashrc` que está no diretório `HOME`, ou seja em `~`, e portanto um comando
+como o seguinte permite lançar o editor para esse ficheiro:
+
+* vscode ~/.bashrc
+
+Basta acrescentar a linha de ajuste do PATH na última linha e guardar o ficheiro
+corrigido, e doravante todas as janelas de terminal (que correm uma `bash`) 
+estarão atualizadas. Janelas já abertas não refletirão essa alteração e portanto,
+se for necessário atualizar o PATH nelas, pode-se nelas executar um comando como:
+
+* source ~/.bashrc
+
+Assim, se se quiser executar um comando existente na pasta corrente, como por
+exemplo `hello`, basta excrever esse comando diretamente e não será preciso a
+alternativa que seria `./hello`
+=========================================================================
+
+
+[TIP]
+=========================================================================
+.Diretivas gerais para uma melhor organização do trabalho nas aulas
+-       Cada aula deve estar numa pasta (diretório): Aula1, Aula2, etc.
+-	Os exercício 1 e 2 da aula de hoje devem ser feitos cada um no
+        seu diretório (criar um para cada caso), mas a partir do
+        Exercício 3 a metodologia consiste em manter-se no mesmo diretório e
+        cada novo exercíco corresponderá a uma função nova criada,
+        como se explica adiante.
+-	Múltiplas alíneas de um exercício fazem parte desse exercício.
+-	Em alguns casos poderá ser útil duplicar um diretório existente
+        (para criar novo exercício ou uma nova aula). Para criar 
+	o diretório e todo o seu conteúdo recursivamente para o novo pode-se
+	usar o seguinte comando que copia toda a estrutura a começar em `ex1`
+	para o diretório `ex2` que é criado se não existir.
+
+		cp -rp ex1 ex2
+
+=========================================================================
+
+
+Exercício 0 (importado da aula anterior)
+----------------------------------------
+
+Criar um programa que imprima numeros primos.
+Usar o nome do ficheiro `primo.c`. Usar duas funções: 
+
+-	`main()`  -> função principal
+-	`int isprime(int)`   -> função auxiliar
+
+Operadores e funções potencialmente úteis
+
+-	`==`    teste comparativo de igualdade
+-	`++`    operador unário de incrementar uma variável
+-	`%`     operador que dá o resto da divisão inteira
+-	`printf()`  - está na biblioteca stdio.h
+
+Usar um `#define` e usar uma função auxiliar `isprime()`
+que aceita um inteiro `n` e retorna 1 ou 0 conforme `n`
+for primo ou não.
+
+.primo.c
+[source,C]
+----------------------------------
+#include <stdio.h>
+#define NN 10000
+
+int isprime(int); //function prototype
+
+int main()
+{
+    int n;
+    for(n=2;n < NN; n++)
+    {
+        if( isprime(n) )
+        {
+            printf("%d\n", n);
+        }
+    }
+    return 0;
+}
+
+int isprime(int n)
+{
+    int k;
+    for(k=2; k<n; k++)
+    {
+        // fill the appropriate code ...
+        return 0;  // not prime!
+    }
+    return 1;  //if reached here, n is not prime
+}
+----------------------------------
+
+
+
+
+Exercício 1
+-----------
+
+Introduzir comentários no início do ficheiro `primo.c`
+e antes de cada função para a descrever.
+Usar o formato Doxygen. Basear-se nos exemplos seguintes...
+
+.primo.c
+[source,C]
+--------------------------------------------------------
+/**
+ *      @file  primo.c
+ *      @brief  Ficheiro para calcular números primos
+ *
+ * Descrição mais detalhada do ficheiro 
+ *
+ *     @author  Vitor Santos, vitor@ua.pt
+ *     @date    25-Sep-2019
+ *
+ ***************************************************
+ */
+
+#include <stdio.h>
+
+int isprime(int);  /*Prototipo da função a usar*/
+
+#define NN 10000
+
+int main()
+{
+	int n; 
+	for(n=2; n<NN; n++)
+	{
+		if( isprime(n) == 1 )
+                     printf("%d\n",n);
+	}
+	return 0;
+}
+
+/*Observe-se abaixo os comentários num formato especial -- Doxygen */
+
+/**
+ * @brief  Função para testar se um número é primo
+ * @param  nn - número a testar
+ * @return 0 se não for primo, 1 se for primo
+ */
+int isprime(int n)
+{
+    int k;
+    for(k=2; k<n/2; k++)
+    {
+        if(n%k==0)
+        	return 0;  // not prime!
+    }
+    return 1;  //if reached here, n is not prime
+}
+--------------------------------------------------------
+
+Compilar e verificar o resultado.
+Gerar um documento (relatório) baseado nos comentários inseridos com o comando "doxygen".
+Se não estiver instalado, instalar com:
+
+	sudo apt install doxygen
+
+[TIP]
+===================================================================================
+.Como executar o doxygen para gerar a documentação
+-	Antes da primeira invocação do comando `doxygen`, é preciso criar o ficheiro
+	de configuração: a `Doxyfile`.
+-	Basta fazer `doxygen -g` para um caso normal.
+-	Para alterar mais detalhes de configuração interna, pode-se editar a `Doxyfile`
+	gerada pelo comando anterior ou usar uma interface gráfica chamada:
+
+		doxywizard
+
+-       que se pode instalar com o comando `sudo apt-get install doxygen-gui`
+-	No fim de criar a Doxyfile, basta executar o comando `doxygen`.
+-	São criados ficheiros de documentação; entre eles o que está na pasta html.
+-	Basta fazer: `cd html; firefox index.html` e pode-se visualizar a documentação gerada.
+-       O Doxygen permite gerar gráficos e diagramas para integrar nos
+        documentos. Isso é configurável na `Doxyfile`, mas só será
+        possível gerá-los se estiver o comando `dot` instalado. Isso
+        pode ser feito do seguinte modo:
+
+          sudo apt install graphviz
+
+===================================================================================
+
+
+
+[TIP]
+====================================================================================
+Se se quiser gerar automaticamente comentários em formato `Doxygen` no `vscode`
+pode-se instalar a extensão `Doxygen Documentation Generator` e assim, por
+exemplo, basta começar a escrever um comentário do estilo de `Doxygen` (que
+será `/**` por defeito) e fazer `ENTER` que o editor preenche logo o cabeçalho
+do ficheiro, ou da função, já preenchido com alguns parâmetros, mas que podem ser
+configurados alterando as definições nos `Settings` como referido adiante.
+====================================================================================
+
+[TIP]
+====================================================================================
+No geral é possivel configurar as "Extensions" do `vscode` para adaptar às necessidades
+do utilizador. Basta seguir os menus `File` -> `Preferences` -> `Settings` ou então
+usar o acelerador de teclado `CTRL+,`.
+
+Na janela que se abre ativa-se a entrada `Settings` e surge logo a lista de
+extensões, e basta selecionar a pretendida. Do lado direito dessa janela aparecem os
+parâmetros a ajustar e/ou instruções para o fazer.
+
+As configurações personalizadas ficam guardadas na pasta
+`~/.config/Code/User/` e algumas em especial no ficheiro
+`~/.config/Code/User/settings.json` que também pode ser editado
+manualmente se se conhecer a linguagem usada pelo vscode.
+====================================================================================
+
+[TIP]
+===================================================================================
+.Alguns conceitos básicos na gestão de código de programas
+- Conceito de `source code` e `object code`.
+- `Source` e `headers`. Bibliotecas ("libraries")
+- Ficheiro de cabeçalho ("header file"): a sua utilidade; os protótipos.
+- Uso de Makefiles - vantagens e aplicações
+   *  O comando `make`
+   *  Explicação dos campos internos da Makefile
+   .  `variables` or `macros` (variáveis ou definições)
+   .  `targets` (alvos)
+   .  `rules` (regras)
+   .  `dependencies` or `prerequisites` (dependências ou prerequisitos)
+   .  `recipes`  (ações/commandos)
+   .  outros (abreviaturas, comentários,.... `$ $< $@ etc.`
+      ** `$@` - nome genérico do 'target' de saída (output)
+      ** `$<` - nome genérico do 1º 'target' de entrada (input, prerequisite, source file, ...)
+- Consultar http://www.gnu.org/software/make/manual/make.html para mais detalhes
+===================================================================================
+
+Exercício 2
+-----------
+2 a)
+~~~~
+
+Separar o ficheiro primo.c em dois ficheiros distintos.
+
+	main.c -> inclui a função principal (main)
+	myf.c -> contém a função de teste dos números.
+
+Manter/reforçar os comentários Doxygen apropriados.
+Cada ficheiro tem de ter um cabeçalho para o Doxygen os processar.
+Compilar os dois ficheiros e gerar um executável:
+
+	gcc -o primo main.c myf.c
+
+Gerar também os comentários com Doxygen e verificar o resultado.
+
+2 b)
+~~~~
+
+Fazer uso de uma Makefile para automatizar o processo de compilação e
+geração da documentação.
+
+Corpo proposto da Makefile:
+
+.Makefile
+[source,makefile]
+---------------------------------------------------------
+#As minhas sources...
+SRC=main.c myf.c
+
+#O binário executável (nome do programa)
+PROG=primo
+
+################################
+
+CC=gcc
+CFLAGS=-Wall
+
+OBJ=$(SRC:.c=.o)  #macro automática para gerar os OBJ a partir das SRC
+
+INCLUDE=    #para as header files (cabeçalhos)
+LIB=        #bibliotecas específicas a usar
+
+############################################
+# Regras
+############################################
+
+###########################################
+# Regras relativas à compilação e linkagem
+
+$(PROG): $(OBJ)
+	$(CC) $(OBJ) -o $(PROG) $(LIB)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+
+#########################################
+# Regras relativas à gestão e organização
+
+clean:
+	rm -rf $(PROG) $(OBJ)
+
+allclean: clean
+	rm -rf html latex
+
+############################################
+# Regras relativas à geração de documentação
+
+doc: Doxyfile html/index.html   #depende da Doxyfile e do ficheiro index.html
+
+Doxyfile:                       #A Doxyfile só depende de si própria. Se não existir é criada.
+	doxygen -g
+
+html/index.html: Doxyfile $(SRC)  #O ficheiro index.html depende obviamente das SRC, mas pode ter outras dependências...
+	doxygen
+
+forcedoc: Doxyfile              #Forçar a geração de documentação mesmo que ela já exista (não depende de index.html)
+	doxygen
+
+###########################################
+# targets que não são ficheiros e evita
+# eventuais conflitos se porventura existirem
+# ficheiros ou diretorios com estes nomes.
+#
+.PHONY: doc clean allclean forcedoc
+
+---------------------------------------------------------
+
+[CAUTION]
+.TABs nas Makefiles
+As ações associadas aos targets na `Makefile` devem
+começar sempre com um `TAB`.
+
+Para compilar e "linkar" o programa basta fazer o comando:
+
+  make
+
+Por outro lado o comando
+
+  make clean
+
+apaga todos os binários.
+
+De igual modo, o comando
+
+  make doc
+
+vai gerar a documentação e criar a Doxyfile, se necessário.
+
+Se a documentação estiver atualizada o comando `make doc` não fará nada,
+se os ficheiros source não tiverem sido alterados o comando `make`
+também não fará nada.
+Finalmente, o comando
+
+  make allclean
+
+é usado para apagar todos os binários e documentação (ou outros
+ficheiros que se queiram especificar)
+
+
+Exercício 3
+-----------
+3 a)
+~~~~
+
+Criar uma cópia do Exercício anterior e modificar o programa nos seguintes pontos:
+
+	ficheiro main.c:
+		Para interpretar um parâmetro de entrada (que será um limite
+		máximo de até onde procurar números primos) e:
+
+	ficheiro myf.c:
+		Para o teste de divisores se fazer até à raiz quadrada do número
+		e não até ao próprio número. Aumenta a eficiência do cálculo.
+
+
+.Alterações principais no main.c
+[source, C]
+-----------------------------------------------------------
+
+#include <stdlib.h>   //Header para incluir funções como atoi(), etc.
+
+int main( int argc, char *argv[])   // preparado para aceitar argumentos 
+{
+	/*... */
+	int maxN=100;  /*variável com o limite a testar, com o valor 100 por defeito*/
+
+	if( argc > 1 ) 
+             maxN=atoi( argv[1]);  /* converte o primeiro parâmetro em número*/
+
+        //Nota: se argc <= 1 (sem argumentos) maxN fica com o valor de defeito
+
+	/*... */
+
+}
+-----------------------------------------------------------
+
+
+.Alterações principais no myf.c
+[source, C]
+-----------------------------------------------------------
+#include <math.h>
+
+int isprime(int nn)
+{
+	/*...*/
+
+	int maxDiv=(int)sqrt(nn); /*Força o resultado de sqrt() a ser inteiro arredondando-o */
+
+	/*...*/
+
+}
+-----------------------------------------------------------
+		
+Compilar o programa com `make`.
+Vai surgir um erro, e a linkagem falha:
+
+.erro na execução do make
+---------------------------------------------------
+myf.o: In function `isprime':
+myf.c:(.text+0x11): undefined reference to `sqrt'
+collect2: error: ld returned 1 exit status
+make: *** [primo] Error 1
+---------------------------------------------------
+
+O problema é a referência indefinida a `sqrt`. De facto, esta
+função encontra-se na biblioteca matemática `libm.a` ou `libm.so`.
+Assim, esta biblioteca tem de ser acrescentada à lista de bibliotecas
+específicas na fase da linkagem. Neste caso basta editar a `Makefile`
+e corrigir a linha da macro `LIB`.
+
+.Correção a fazer na `Makefile`
+-------
+LIB=-lm
+-------
+
+Depois de compilado, já se pode testar o programa de forma a imprimir
+todos os primos até 1000 com o seguinte comando:
+
+	primo 1000
+
+3 b)
+~~~~
+
+Calcular quantos números primos inferiores a 10000 têm o algarismo 3.
+Sugestão: usar comandos de shell como `grep` e `wc`
+para processar a saída do comando `primo 10000`, recordando que o
+encadeamento de comandos na `shell` é feito com o operador `|`
+("pipe")
+
+	primo 10000 | grep 3 | wc -l
+
+A resposta deve ser 561.
+
+O comando `grep` é usado para filtrar um texto
+mostrando apenas as linhas que contêm ma dada expressão (`regular
+expression`).
+Por exemplo o seguinte comando:
+
+	grep root /etc/passwd
+
+lê o ficheiro /etc/passwd e mostra todas as linhas
+que tenham a expressão "root" (será só uma em geral).
+Ou ainda o comando:
+
+	grep sy /etc/passwd
+
+que faz o mesmo mas mostra apenas as linhas que têm 
+a expressão "sy" (são mais do que uma em geral).
+
+[IMPORTANT]
+.Metodologia dos exercícios futuros
+Daqui para frente, cada exercício deverá ser feito como uma função
+colocada fora do ficheiro principal. Será em geral o ficheiro
+`myf.c` ou outros que possa ser conveniente vir a criar.
+Assim, o `main()` será ajustado para invocar a respetiva função.
+
+Exercício 4: Ciclos "for", "while" e "do-while"
+------------------------------------------------
+
+4 a)
+~~~
+Escrever a função `PrintAllPreviousChars()` que não tem parâmetros e não
+retorna nada (tipo void) mas que quando executada lê um caractere do teclado
+usando `getchar()` [que é uma função da `stdio.h`] e imprime todos os
+caracteres desde o espaço ' ' até esse caractere. Completar o código fornecido
+com o código que falta.
+
+.myf.c
+[source,C]
+----------------------------------
+#include <stdio.h>
+
+/*...*/
+
+void PrintAllPreviousChars()
+{
+	int n, ch;
+	ch=getchar();   // the important function to read from keyboard
+	for( n=' '; n <= ch ; n++)
+	{
+		// code here to print all chars....
+	}
+        return;
+}
+----------------------------------
+
+
+4 b)
+~~~~
+Escrever a função 'ReadAllUpToX()' para ler caracteres (getchar) de forma
+contínua e terminar quando chegar o caractere ''X''.
+
+.myf.c
+[source,C]
+----------------------------------
+//...
+void ReadAllUpToX(void)
+{
+	int ch=0;
+	while( ch != 'X')
+	{
+		// code here ...
+	}
+}
+----------------------------------
+
+ou em alternativa
+
+.myf.c
+[source,C]
+----------------------------------
+//...
+void ReadAllUpToX(void)
+{
+        int ch;
+	do
+	{
+		ch=/*...*/;
+		/*...*/
+	} while( ch != /*...*/);
+}
+----------------------------------
+
+Qual a diferença entre as duas abordagens anteriores da construção de
+ciclos com  `while` e `do-while`?
+
+4 c)
+~~~~
+
+Criar a função 'CountLettersUptoX()' para ler caracteres continuamente
+e terminar quando chegar o caractere ''X'', e nessa altura indicar 
+quantos caracteres são algarismos e quantos não são algarismos.
+Usar a função `isdigit()` e operadores de incremento `++`.
+
+.myf.c
+[source,C]
+----------------------------------
+
+void CountLettersUptoX(void)
+{
+	int countL=0, countN=0;
+	do
+	{
+                //...
+		if( isdigit(/*...*/) ) 
+		{
+			countN++;
+		}
+		else
+		{
+			/*...*/
+		}
+	} while(/*...*/);
+	printf(/*...*/);
+	//...
+}
+----------------------------------
+
+[IMPORTANT]
+.Funções desconhecidas
+A função `isdigit()`, e outras que forem surgindo,
+não estão definidas no cabeçalho standard `stdio.h`
+e portanto é natural que o compilador dê um erro
+porque não a conhece. Para isso, é preciso incluir
+a _header_ adequada no início do ficheiro. A _header_
+onde se encontra cada função pode ser indicada numa consulta ao
+manual: assim, ao fazer o comando `man isdigit` no terminal, será
+mostrada a página do manual a descrever o que faz a função, bem como
+a _header_ onde está declarada. Basta copiar essa linha para o código
+que está a ser escrito. Neste caso será `#include <ctype.h>`
+
+Exercício 5 - Tipos simples de dados em C
+-----------------------------------------
+
+Escrever uma função 'PrintTypesSize()' que escreva no ecrã a dimensão
+dos seguintes tipos de dados usando o operador especial `sizeof()`:
+
+  char, short, int, long , long long , float , double , long double , _Bool , _Complex
+
+Por exemplo, a expressão `sizeof(char)` será substituida por um
+número que representa a dimensão em bytes de um tipo
+de dados "char" (que em geral é só 1 byte).
+
+.myf.c
+[source,C]
+----------------------------------
+void PrintTypesSize()
+{
+	printf("Size of 'char' = %ld\n", sizeof(char));
+	//... completar
+}
+----------------------------------
+
+Exercício 6 - tipos de dados e _arrays_
+---------------------------------------
+Criar o tipo de dados como equivalente a 'int' (usando o comando 'typedef').
+Criar a função 'GetCharsAndPrintAlphas()' que cria localmente um _array_ de 100
+bytes, lê do teclado caracteres em sequência (getchar) e armazena-os
+nesse _array_ de bytes. Terminar a leitura ao chegar ao limite do
+_array_ ou quando surgir o caracter ''s''.
+Nessa altura imprimir apenas os caracteres da lista que sejam letras
+(usar a função `isalpha()` ).
+
+
+.myf.c
+[source,C]
+----------------------------------
+
+//...
+
+typedef byte int;   // cria um novo tipo chamado byte que aqui é o mesmo que int
+
+#define NN 100
+
+void GetCharsAndPrintAlphas(void)
+{
+	int n,i;
+	byte str[NN];  // por causa do typedef o mesmo que int str[NN];
+	byte b;       // por causa do typedef o mesmo que int b;
+	
+	for( n=0; n<NN; n++)
+	{
+		b=getchar();
+		if( /* code here ....*/ )  break;
+		str[n]=b;  //guarda o byte b no array
+	}
+
+	for(i=0; /* code here ...*/ )
+	{
+		if( isalpha(/*code here...*) )
+			printf("%c", /*code here...*/);
+	}
+}
+----------------------------------
+

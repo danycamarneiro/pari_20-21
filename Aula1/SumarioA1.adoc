@@ -1,12 +1,11 @@
-Aula 1 - PARI, Sumário e Exercícios, 18 Set 2019
-================================================
-Vitor Santos <vitor@ua.pt>
-v6.0, Sep. 2019
+Aula 1 - PARI
+=============
+Miguel Riem Oliveira <mriem@ua.pt>
+2020-2021
 
 // Instruções especiais para o asciidoc usar icons no output
 :icons: html5
 :iconsdir: /etc/asciidoc/images/icons 
-
 
 .Sumário
 -----------------------------------------------
@@ -19,7 +18,6 @@ Introdução ao Linux - A shell
 Alguns comandos básicos
 Redirecionamento (saida e entrada de comandos)
 Pipes e encadeamento de comandos
-Editores (pycharm e sua configuração)
 Programas elementares em python
 -----------------------------------------------
 
