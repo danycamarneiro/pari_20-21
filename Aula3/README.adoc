@@ -1,0 +1,1104 @@
+Aula 3 - PARI, Sumário e Exercícios, 9 Out 2019
+================================================
+Vitor Santos <vitor@ua.pt>
+v4.2, Out. 2019
+
+// Instruções especiais para o asciidoc usar icons no output
+:icons: html5
+:iconsdir: /etc/asciidoc/images/icons
+
+
+.Sumário
+-------------------------------------------------------------
+Mais elementos para a geração de documentação (mainpage.dox, logotipo, etc.).
+Alterações adicionais na Makefile (cproto e makedepend).
+Os protótipos de funções.
+Funções "tictoc".
+Estruturas de dados.
+Passagem por valor e por referência.
+Conceitos de variáveis e endereços das variáveis na memória.
+Gestão dinâmica da memória num programa.
+-------------------------------------------------------------
+
+[NOTE]
+=========================================================================
+.Metodologia e nota inicial
+Tal como referido anteriormente, cada exercício das aulas corresponderá ao
+desenvolvimento de uma função no ficheiro `myf.c` que é invocada
+a partir do `main()` que está no ficheiro `main.c`.
+Criar-se-á também o ficheiro de cabeçalho do projeto (`header file`) 
+que se designará `myf.h`. Nesta lição, em alguns casos, serão criadas
+variantes de uma função que têm o mesmo objetivo mas serão implementadas com
+com metodologias diferentes. Assim, para não haver confusão de nomes sugere-se
+usar alguns caracteres discriminadores das diversas variantes:
+por exemplo, a função `SwapValues()` a desenvolver terá umas
+variantes preliminares designadas `SwapValues_()` ou `SwapValues__()`.
+=========================================================================
+
+
+[NOTE]
+=========================================================================
+.Configurações adicionais para geração de documentação Doxygen
+Além dos comentários em bloco para cada ficheiro (colocados no início de cada ficheiro)
+e para cada função (colocados imediatamente antes de cada função), podem também criar-se
+comentários Doxygen de uma só linha para variáveis, definições, macros, etc:
+
+  /**< @brief Aqui ficam os comentários associados... */
+
+Para uma documentação mais completa de um projeto, deve-se também
+colocar informação geral numa página de entrada do Doxygen (`mainpage`).
+Essa informação pode estar em qualquer parte dos comentários
+dos ficheiros (por exemplo no `main.c`), mas por uma questão de
+organização, recomenda-se que esteja num ficheiro dedicado, por exemplo
+`mainpage.dox`. Na verdade, o Doxygen processa qualquer ficheiro com
+extensão `.dox` e junta-o à documentação. Recorda-se que estes comentários
+são efetivamente comentários em C/C++ e portanto podem ser incluídos em qualquer
+parte dos programas sem afetar a sua compilação. Ilustra-se de seguida um exemplo
+de código que poderia ficar no ficheiro `mainpage.dox`:
+
+=========================================================================
+
+.Exemplo de ficheiro `mainpage.dox`
+[source,C]
+-------------------------------------------------------------------------
+/** @mainpage Aula número 3 de PARI
+ *
+ * @section intro_sec Sumário da Aula
+ *
+ *  A mainpage.dox para a geração de documentação. \n
+ *  Alterações na Makefile (ctags e makedepend). \n
+ *  Funções "tictoc". \n
+ *  Estruturas de dados. \n
+ *  Passagem por valor e por referência. \n
+ *  Conceitos de variáveis e endereços das variáveis na memória. \n
+ *  Gestão dinâmica da memória num programa. \n
+ *
+ * @section exerc_sec Exercícios
+ *
+ * Exercício 0 - Preparação dos ficheiros para os exercícios \n
+ * Exercício 1 - Introdução de alterações adicionais à Makefile para automatizar processos \n
+ * Exercício 2 - ciclos while e do-while \n
+ * Exercício 3 - tipos de dados e _arrays_ \n
+ * Exercício 4 - Pausa com usleep() \n
+ * Exercício 5 - Introdução de gettimeofday \n
+ * Exercício 6 - Criação de tic/toc \n
+ * Exercício 7 - Criação da estrutura `complexo` \n
+ * Exercício 8 - Passagem por valor e por referência \n
+ * Exercício 9 - Criação da estrutura `tempo` e funções de manipulação \n
+ *
+ */
+-------------------------------------------------------------------------
+
+No ficheiro `mainpage.dox` observe-se a presença do caractere `\n` no final de
+cada linha para forçar a criação de novas linhas na página HTML. Se esse
+caractere não for colocado o texto ficará todo numa única linha...
+
+[NOTE]
+=========================================================================
+.Comentários mais complexos em contexto Doxygen
+Para além das `keywords` especiais já referidas nos comentários
+doxygen, (`@file`, `@brief`, `@author`, `@param`, `@return`, `@mainpage`, `@section`, ...)
+há muitos mais comandos e construções permitidas pelo Doxygen para gerar
+documentação mais rica, e até pode incluir imagens e outros recursos.
+Mais ainda, o Doxygen reconhece duas formas de assinalar essas
+keywords: com `@` como acima, ou em alternativa com `\`. Por exemplo, são equivalentes
+as duas notações: `@file` ou `\file`. O programador escolhe o que preferir.
+
+Consultar o manual on-line do Doxygen para uma referência completa
+dos comandos: http://www.stack.nl/\~dimitri/doxygen/manual/commands.html.
+Adicionalmente, o Doxygen permite a inclusão direta de comandos HTML:
+http://www.stack.nl/\~dimitri/doxygen/manual/htmlcmds.html.
+
+=========================================================================
+
+Exercício 0 - Preparação dos ficheiros para os exercícios
+---------------------------------------------------------
+
+Criar a pasta (diretório) para a aula. Os exercícios serão feitos todos
+por incremento sucessivo dos ficheiros, que serão essencialmente os seguintes:
+
+-  `main.c` -> ficheiro com o `main()` e que invoca as funções associadas a cada exercício
+-  `myf.c`  -> ficheiro com as funções associadas a cada exercício
+-  `myf.h`  -> ficheiro de cabeçalho com as definições transversais ao projeto (aula)
+-  `prototypes.h`  -> ficheiro gerado automaticamente com os protótipos das funções (ver adiante)
+-  `Makefile` -> a makefile do projeto
+
+e os seguintes, opcionais, ligados à documentação:
+
+-  `Doxyfile`   -> ficheiro de configuração do Doxygen (gerado automaticamente,
+   mas eventualmente editado pelo programador para incluir algumas especificidades)
+-  `mainpage.dox` -> Ficheiro criado pelo programador com a descrição da página de
+   entrada da documentação.
+-  `outros ficheiros` -> Poderão fazer parte da documentação outros ficheiros
+   adicionais como imagens, ícones, etc.
+
+Indicam-se de seguida exemplos minimalistas dos ficheiros principais ilustrando
+a invocação de funções para realizar dois exercícios, com uma função cada (omitiram-se
+cabeçalhos e comentários mais elaborados para simplificar). Nota: são meros exemplos
+do que se vai criar, mas **não** devem ser criados agora porque isso será feito
+de forma mais sistematizada nos exercícios seguintes.
+
+.Exemplo minimalista de ficheiro `main.c` (mas que não é para fazer agora)
+[source,C]
+----------------------------------------------
+#include <stdio.h>    //header file for I/O functions and definitions
+#include "myf.h"      //header file with definitions for this project
+int main()
+{
+#if 0  // ex. 1 NB. Este código não será compilado!
+  if ( myFunc1() == YES ) printf("My test 1\n");
+#endif  //  fim do código não compilado!
+
+#if 1 // ex. 2
+  if ( myFunc2() == YES ) printf("My test 2\n");
+#endif
+  return 0;
+}
+----------------------------------------------
+
+O exemplo anterior de `main.c` inclui as diretivas de pré-processador ++#if/#endif++
+como forma de compartimentar o código e permitir a sua compilação condicional.
+Ou seja, ao fazer-se ++#if 0++ ... ++#endif++ o código entre essas duas diretivas não
+é compilado. Basta mudar o `0` para `1` e já o será na próxima compilação! Esta técnica
+é muito similar a fazer comentários, mas é formalmente diferente e tem a vantagem de poder
+"comentar/suprimir" código que poderá já ter comentários e onde um eventual comentário
+encadeado poderia não ser permitido; mais ainda, basta alterar um caractere para
+ter o código ativo/não ativo na compilação.
+
+.Exemplo minimalista de ficheiro `myf.c` (mas que não é para implementar agora)
+[source,C]
+----------------------------------------------
+#include "myf.h"      //header file with definitions for this project
+int myFunc1()
+{
+  return YES;
+}
+
+int myFunc2()
+{
+  return YES;
+}
+---------------------------------------------
+
+.Exemplo minimalista de ficheiro `myf.h` (mas que não é para implementar agora)
+[source,C]
+----------------------------------------------
+#define YES   1
+#define NO    0
+#include "prototypes.h"  //file with prototypes of functions. Recommend to be the last line of header file
+---------------------------------------------
+
+O ficheiro `myf.h` serve para disponibilizar definições e outra informação
+auxiliar a todos os ficheiros fonte do projeto. Isso inclui variáveis globais,
+definições (`#define`), macros, novos tipos de dados, protótipos de funções, etc.
+Assim, este ficheiro de cabeçalho deve ser incluído por todos os ficheiros de código fonte do projeto.
+
+.Exemplo minimalista de ficheiro `prototypes.h` (mas que não é para implementar agora)
+[source,C]
+----------------------------------------------
+int myFunc1();
+int myFunc2();
+----------------------------------------------
+
+Em C ( e C++ ), nenhuma função ou variável pode ser usada sem ser
+previamente declarada. "Declarar" significa explicitar (indicar) o tipo
+e/ou o tipo de argumentos. Por exemplo, antes de usar a variável `var1`,
+como em `var1 = 12;` é necessário declarar o seu tipo antes:
+`int var1;`; muitas vezes faz-se as duas operações de uma só vez:
+`int var1 = 12;`. A declaração só tem de ser feita uma vez dentro
+do corpo de uma função.
+
+Tão importante quanto a declaração de variáveis, é a declaração de
+funções; a declaração de uma função faz-se com aquilo a que se chama `protótipo`
+dessa função. Por exemplo, uma função `func1()` que retorna um inteiro
+mas aceita um `char` e um outro inteiro como argumentos, teria o seguinte
+protótipo:
+  
+  int func1(char, int);   //prototype of function func1
+
+Repare-se que se indicam apenas os tipos dos valores (de retorno e dos 
+argumentos), mas poder-se-iam acrescentar nomes de variáveis nos argumentos
+para melhor lembrar a sua natureza, mas isso é perfeitamente opcional e ignorado
+pelo compilador. Por exemplo, o seguinte protótipo:
+
+  int func1(char key, int count);   //prototype of function func1
+
+poderia sugerir que o primeiro argumento `key` seria uma tecla, e que `count`
+pudesse representar o número de vezes que foi premida... Enfim, os protótipos
+ficam mais ricos com esta informação, mas ela não é obrigatória!
+
+Assim, só depois de haver a declaração (protótipo) se deve usar uma
+função porque, caso contrário, o compilador assume um tipo por defeito, que pode
+não ser o real e assim criar problemas na interpretação do valor de retorno ou dos
+argumentos. Portanto, o recomendado é mesmo colocar os protótipos todos na `header file`
+do projeto (`myf.h` no nosso exemplo).
+
+Como os protótipos podem ser morosos de escrever manualmente (trabalho repetido),
+o que se propõe adiante é criar os protótipos de forma automática a partir
+do corpo das funções que já foram previamente escritas, ou seja, primeiro escrevem-se as
+funções e só depois se geram os protótipos. Isso será feito adiante com alguns comandos
+executados na Makefile e os protótipos serão todos colocados no ficheiro
+`prototypes.h`
+
+
+Exercício 1 - Introdução de alterações adicionais à Makefile para automatizar processos
+---------------------------------------------------------------------------------------
+
+Usar a Makefile criada na aula anterior e acrescentar-lhe as alterações seguintes:
+
+1 a)
+~~~~
+Criar uma regra para gerar automaticamente um ficheiro de protótipos `prototypes.h` criando um
+novo `target` designado `proto prototypes.h:` (os dois nomes são apenas sinónimos).
+Para garantir que se mantém uma adequada atualização do ficheiro
+`prototypes.h` é necessário assegurar que na `Makefile` existe
+a dependência automática na criação desse ficheiro sempre que ele não
+exista, bem como a sua dependência com as sources `$(SRC)`. Assim, as alterações
+principais são a introdução da dependência logo no `target` principal.
+
+[source,Makefile]
+-------------------------------------------------------------------------------------
+$(PROG): prototypes.h $(OBJ)
+	$(CC) $(OBJ) -o $(PROG) $(LIB)
+
+#[...]
+
+proto prototypes.h: $(SRC)   #decidir se esta dependência deve ou não existir!
+	@echo "Rebuild prototypes.h"
+	@echo '/*File generated automatically. Do not edit*/' > prototypes.h
+	@echo '/*Generated on' `hostname` ',' `date` '*/' >> prototypes.h
+        @cproto -q -O /dev/null $(SRC) >> prototypes.h
+
+-------------------------------------------------------------------------------------
+
+O comando `make proto` cria o ficheiro `prototypes.h`
+que recolhe/cria todos os protótipos das funções presentes
+nos ficheiros source, mas ele será chamado automaticamente
+se o ficheiro não existir aquando de um `make` simples ou sempre
+que as `$(SRC)` forem alteradas.
+
+Para o efeito, será necessário instalar a package `cproto`.
+Embora não seja necessário para já, podem também ser úteis 
+as packages `ctags` e `indent`. Assim recomenda-se usar o seguinte
+comando para instalar estas 3 packages:
+
+  sudo apt install cproto exuberant-ctags indent
+
+O ficheiro `prototypes.h` pode (deve) assim ser incluído
+pela header do projeto (`myf.h`) para ficar acessível a todos
+os ficheiros do projeto.
+
+
+1 b)
+~~~~
+Como referido anteriormente, é importante existir o ficheiro `mainpage.dox`
+para servir de página de entrada na documentação.
+Assim, criar o ficheiro `mainpage.dox` com o conteúdo indicado no início deste
+documento, ou outro adequado ao projeto em causa.
+
+1 c)
+~~~~
+A geração de documentação pode ainda ser mais personalizada pela edição
+do ficheiro de configuração `Doxyfile`. Isso pode ser feito manualmente
+editando o ficheiro com um editor normal, ou então com uma ferramenta
+interativa designada `doxywizard`. Em qualquer dos casos, será sempre
+o ficheiro `Doxyfile` que será alterado. Porém, também se podem fazer
+personalizações de forma automática, e isso também pode estar na Makefile!
+Incorporar o seguinte excerto na Makefile para ajustar automaticamente
+a Doxyfile em alguns campos mais relevantes:
+
+.Alteração da Makefile para ajuste automático da Doxyfile
+[source,Makefile]
+---------------------------------------------
+############################################
+# Regras relativas à geração de documentação
+
+#depende da $(DOXYFILE) e do ficheiro index.html
+doc: $(DOXYFILE) html/index.html
+
+#A $(DOXYFILE) só depende de si própria.
+#Se não existir é criada e alguns defaults são ajustados:
+$(DOXYFILE):                       
+	doxygen -g $(DOXYFILE) ; \
+	sed -i 's/^PROJECT_NAME.*$$/PROJECT_NAME          = "My project $(PROG)"/' $(DOXYFILE) ;\
+	sed -i 's/^GENERATE_LATEX.*$$/GENERATE_LATEX      = NO/'                   $(DOXYFILE) ;\
+	sed -i 's/^HAVE_DOT.*$$/HAVE_DOT                  = YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^SOURCE_BROWSER.*$$/SOURCE_BROWSER      = YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^GENERATE_TREEVIEW.*$$/GENERATE_TREEVIEW= YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^PROJECT_LOGO.*$$/PROJECT_LOGO          = PARIlogo.png/'         $(DOXYFILE) ;
+
+#O ficheiro index.html depende obviamente da Doxyfile e das SRC, mas
+#pode ter outras dependências adicionais...
+html/index.html: $(DOXYFILE) $(SRC) mainpage.dox PARIlogo.png 
+	doxygen
+
+#Forçar a geração de documentação mesmo que ela já exista (não depende de index.html)
+forcedoc: $(DOXYFILE)
+	doxygen
+---------------------------------------------
+
+Para forçar atualizações da Doxyfile deve-se primeiro apagá-la manualmente.
+Este procedimento é recomendado para evitar eliminação acidental do ficheiro.
+Assim, se se quiser re-inicializar o ficheiro Doxyfile, primeiro deve-se apagar
+manualmente (`rm Doxyfile`) e dois o `make doc` recria-a de novo.
+
+1 d)
+~~~~
+Para personalizar ainda mais o projeto pode-se associar um logotipo que será
+incorporado na página da documentação. No exemplo acima, espera-se que exista
+o ficheiro `PARIlogo.png`, mas poderá ser outro nome a definir pelo programador.
+Neste exercício propõe-se criar um logotipo automático adaptado à aula em causa.
+Assim, propõe-se criar uma imagem para o logotipo usando o software `convert`
+da ImageMagik. Para instalar este software basta fazer `sudo apt install imagemagick`.
+O comando `convert` é muito poderoso e tem muitas opções. Recomenda-se
+consultar o seu manual para mais detalhes: http://www.imagemagick.org/script/convert.php
+
+O ajuste na Makefile pode ser como indicado no excerto seguinte.
+
+.Ajuste da Makefile para criação automática de um ficheiro com logotipo personalizado
+[source,Makefile]
+---------------------------------------------
+
+#Gera ficheiro de logotipo automaticamente
+logo PARIlogo.png:
+	convert pattern:circles \( +clone \) +append \( +clone \) -append \
+	        -fill grey -opaque black  -blur 0x0.5 -shade 120x45 \
+		-gravity center -crop 50%  +repage    miff:- |\
+		 convert  -size 80x80 tile:- -fill blue \
+		-draw "scale 2.5,3 text 2,12 PARI" \
+		-draw "scale 2,2 text 2,32 'Aula $(AULA)'" PARIlogo.png
+---------------------------------------------
+
+N.B. A variável `$(AULA)` tem de estar previamente definida na Makefile
+com, por exemplo, o seguinte comando na secção inicial da Makefile:
+
+  AULA = 3
+
+
+1 e)
+~~~~
+Para compensar eventuais alterações de dependências com as `header files`
+de código já compilado [`$(OBJ)`], deve-se usar o comando
+`make dep` que cria essas dependências dentro da Makefile. 
+Se essa dependência não for criada manualmente pode não haver atualizações
+aquando de um `make`, mas quando se fizer um `make clean` essa questão
+perde relevância porque é tudo compilado de novo.
+O problema efetivo é que se se alterar uma header file sem alterar as source
+files não há indicações que deve haver recompilação, por a dependência das
+object files é das header files e isso não está explícito em lado nenhum!
+
+Assim, criar uma regra para criar uma lista de dependências de header files.
+Recorre-se ao comando `makedepend` (que terá de ser instalado).
+
+  sudo apt install xutils-dev
+
+Cria-se um target alusivo à verificação de dependências (dep).
+
+[source, Makefile]
+-------------------------------------------------------------------------------------
+dep:
+    makedepend -Y $(SRC) 2> /dev/null
+-------------------------------------------------------------------------------------
+
+Deste modo, a instrução `make dep` criará dependências especiais
+no fim da Makefile onde se assinala a dependência dos OBJ
+das diversas headers. Estas cautelas são necessárias porque
+pode haver alterações das headers (myf.h ou outras)
+mas como as SRC (*.c) não se alteraram, não há recompilação.
+Desta forma, isso resolve-se.
+
+Testar a funcionalidade criando estas dependências e invocando
+o comando referido. Depois fazer no terminal `touch myf.h` e fazer
+de novo o `make`: verifica-se que há recompilação mesmo
+não tendo as sources *.c sido alteradas.
+
+De seguida inclui-se uma Makefile completa com todos os procedimentos
+acima. Deverá ser adaptada para cada projeto futuro, em especial
+no nome dos ficheiros fonte (*.c) e novas bibliotecas que forem surgindo.
+O comando `make dep`, embora não crítico, será importante de executar
+quando se acrescentem header files específicas do projeto, em especial
+quando estiverem em modificações. Esta Makefile inclui já algumas alterações
+adicionais à Doxyfile para maior personalização da geração de documentação.
+
+[CAUTION]
+================================================================================
+Há todavia uma nota a ressalvar. O comando `make dep` vai criar as dependências
+de todas as header files, incluindo `prototypes.h`, como seria de esperar.
+Porém, se a `prototypes.h` estiver sempre a atualizar quando se alteram uma
+ou mais das $(SRC), qualquer alteração de uma $(SRC) vai forçar a recompilação
+de todo o projeto. Ora, isso não é vantajoso em projetos de grande dimensão. Nesses
+casos, recomenda-se que que o ficheiro `prototypes.h` não tenha como
+dependências as `$(SRC)` como foi inicialmente sugerido! Nessa realidade,
+a atualização dos protótipos terá de ser forçada com a execução manual, ou seja
+com `make proto`.
+================================================================================
+
+.Uma Makefile mais completa
+[source,Makefile]
+---------------------------------------------
+#As minhas sources...
+SRC=main.c myf.c
+
+#Ficheiros de cabeçalho
+HEADERS=myf.h
+
+#O binário executável (nome do programa)
+PROG=myf
+
+#Ficheiro para o Doxygen
+DOXYFILE=Doxyfile
+
+AULA=3
+
+################################
+
+CC=gcc
+CFLAGS=-Wall #-MD
+
+OBJ=$(SRC:.c=.o)  #macro automática para gerar os OBJ a partir das SRC
+
+INCLUDE=    #para as header files (cabeçalhos)
+LIB=-lm     #bibliotecas específicas a usar
+
+############################################
+# Regras
+############################################
+
+###########################################
+# Regras relativas à compilação e linkagem
+
+$(PROG): prototypes.h $(OBJ)
+	$(CC) $(OBJ) -o $(PROG) $(LIB)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $(INCLUDE) $< -o $@
+
+#########################################
+# Regras relativas à gestão e organização
+
+clean:
+	rm -rf $(PROG) $(OBJ)
+
+allclean: clean
+	rm -rf html latex *.bak *~ tags prototypes.h
+
+############################################
+# Regras relativas à geração de documentação
+
+#depende da $(DOXYFILE) e do ficheiro index.html
+doc: $(DOXYFILE) html/index.html
+
+#A $(DOXYFILE) só depende de si própria.
+#Se não existir é criada e alguns defaults são ajustados:
+$(DOXYFILE):                       
+	doxygen -g $(DOXYFILE) ; \
+	sed -i 's/^PROJECT_NAME.*$$/PROJECT_NAME          = "My project $(PROG)"/' $(DOXYFILE) ;\
+	sed -i 's/^GENERATE_LATEX.*$$/GENERATE_LATEX      = NO/'                   $(DOXYFILE) ;\
+	sed -i 's/^HAVE_DOT.*$$/HAVE_DOT                  = YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^SOURCE_BROWSER.*$$/SOURCE_BROWSER      = YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^GENERATE_TREEVIEW.*$$/GENERATE_TREEVIEW= YES/'                  $(DOXYFILE) ;\
+	sed -i 's/^PROJECT_LOGO.*$$/PROJECT_LOGO          = PARIlogo.png/'         $(DOXYFILE) ;
+
+
+#O ficheiro index.html depende obviamente da Doxyfile e das SRC, mas
+#pode ter outras dependências adicionais...
+html/index.html: $(DOXYFILE) $(SRC) mainpage.dox PARIlogo.png 
+	doxygen
+
+#Forçar a geração de documentação mesmo que ela já exista (não depende de index.html)
+forcedoc: $(DOXYFILE)
+	doxygen
+
+#Gera logotipo automaticamente
+logo PARIlogo.png:
+	convert pattern:circles \( +clone \) +append \( +clone \) -append \
+	        -fill grey -opaque black  -blur 0x0.5 -shade 120x45 \
+		-gravity center -crop 50%  +repage    miff:- |\
+		 convert  -size 80x80 tile:- -fill blue \
+		-draw "scale 2.5,3 text 2,12 PARI" \
+		-draw "scale 2,2 text 2,32 'Aula $(AULA)'" PARIlogo.png
+
+############################################
+# Regra relativa à geração do ficheiro de protótipos
+# 
+proto prototypes.h: $(SRC) #Esta dependência pode ser incómoda. Comentar nessa situação
+	@echo "Rebuild prototypes.h"
+	@echo '/*File generated automatically. Do not edit*/' > prototypes.h
+	@echo '/*Generated on' `hostname` ',' `date` '*/'     >> prototypes.h
+	@cproto -q -O /dev/null $(SRC)                        >> prototypes.h
+
+###########################################
+# targets que não são ficheiros e evita
+# eventuais conflitos se porventura existirem
+# ficheiros ou diretorios com estes nomes.
+#
+.PHONY: doc clean allclean forcedoc proto logo
+
+############################################################
+# regra para criar dependencias com as header files caso haja
+# alguma alteração às header e NÃO haja nas sources!
+# Basta invocar este target (make dep) quando houver inclusão de novas header no projeto
+# Gera automaticamente as dependências abaixo da linha "DO NOT DELETE"
+dep depend: $(SRC)
+	makedepend -Y $(SRC) 2> /dev/null
+# DO NOT DELETE
+
+main.o: myf.h
+myf.o: myf.h
+-------------------------------------
+
+Exercício 2 - ciclos while e do-while
+-------------------------------------
+
+Escrever a função 'ReadAllUpToX()' para ler caracteres introduzidos
+pelo utilizador (getchar) de forma contínua e terminar o programa
+quando chegar o caractere ''X''.
+
+.a criar no myf.c
+[source,C]
+----------------------------------
+//...
+void ReadAllUpToX(void)
+{
+	int ch=0;
+	while( ch != 'X')
+	{
+		// code here ...
+	}
+}
+----------------------------------
+
+ou em alternativa, usando o ciclo do-while:
+
+.a criar no myf.c
+[source,C]
+----------------------------------
+//...
+void ReadAllUpToX(void)
+{
+        int ch;
+	do
+	{
+		ch=/*...*/;
+		/*...*/
+	} while( ch != /*...*/);
+}
+----------------------------------
+
+Qual a diferença entre as duas abordagens anteriores da construção de
+ciclos com  `while` e `do-while`?
+
+
+Exercício 3 - tipos de dados e _arrays_
+---------------------------------------
+Criar um tipo de dados designado 'byte' como equivalente a 'int' 
+(usando o comando `typedef`).
+Criar a função `GetCharsAndPrintAlphas()` que cria localmente um _array_ de 100
+bytes, lê do teclado caracteres em sequência (getchar) e armazena-os
+nesse _array_ de bytes. Terminar a leitura ao chegar ao limite do
+_array_ ou quando surgir o caracter ''s''.
+Nessa altura imprimir apenas os caracteres da lista que sejam letras
+(usar a função `isalpha()` ).
+
+.A introduzir na myf.h
+[source,C]
+----------------------------------
+typedef int byte;   // cria um novo tipo chamado byte que é o mesmo que int
+----------------------------------
+
+.A introduzir na myf.c
+[source,C]
+----------------------------------
+#include "myf.h"
+
+#define NN 100
+
+void GetCharsAndPrintAlphas(void)
+{
+	int n,i;
+	byte str[NN];  // por causa do typedef é o mesmo que int str[NN];
+	byte b;        // por causa do typedef é o mesmo que int b;
+	
+	for( n=0; n<NN; n++)
+	{
+		b=getchar();
+		if( /* code here ....*/ )  break;
+		str[n]=b;  //guarda o byte b no array
+	}
+
+	for(i=0; /* code here ...*/ )
+	{
+		if( isalpha(/*code here...*) )
+			printf("%c", /*code here...*/);
+	}
+}
+----------------------------------
+
+
+Exercício 4 - Pausa com usleep()
+----------------------------------
+Criar uma função chamada `Chronograph(int dura)` que aceita um 
+argumento `dura` e que, à custa da função `usleep()`, presente no 
+sistema (ver manual), faça um cronómetro que escreve o tempo no 
+ecrã no seguinte formato 00.0 s, portanto a 10 Hz, e que termina 
+automaticamente ao fim de `dura` segundos.
+
+O texto do cronómetro deve ficar continuamente sobreposto
+sem fazer mudança de linha e portanto deve-se o caracter `\r`
+para fazer "carriage return" sem "newline".
+
+.A introduzir na myf.c
+[source,C]
+---------------------------------------------------------------------
+#include <unistd.h>   //para o usleep()
+
+void Chronograph( int dura )
+{
+    //...
+    for(n=0; n<= /*...*/; n++)
+    {
+        printf("\r%02d.%d", /*...*/, /*...*/);
+        fflush(stdout);  //comando para garantir que o ecran é sempre atualizado
+        usleep(/*...*/);
+    }
+    printf("%c\n",7);  //Imprime uma mudança de linha e um som
+}
+---------------------------------------------------------------------
+
+Exercício 5 - Introdução de gettimeofday
+----------------------------------------
+Criar a função `void PrintTimeSince1970()` que indique quantos segundos e microsegundos
+passaram desde 1 de Janeiro de 1970. Esta função usa um tipo
+de dados composto chamada 'estrutura' ou `struct` na syntaxe do C, que é feito à custa
+de outros tipos de dados. Neste caso, esta estrutura tem 3 campos.
+Consultar o manual para ver o tipo da função e dos tipos de dados:
+
+	    man gettimeofday
+
+.A introduzir na myf.c
+[source,C]
+---------------------------------------------------------------------
+#include <sys/time.h>  //header file para gettimeofday e struct timeval
+
+void PrintTimeSince1970()
+{
+    struct timeval t1;        //t1 é uma variável composta (estrutura) com dois campos de tipo long. Ver manual
+    gettimeofday(&t1, NULL);  //invoca a função para a preencher com o tempo atual!
+    printf("%ld seconds, %ld microseconds\n", /*...*/, /*...*/);
+}
+---------------------------------------------------------------------
+
+
+Exercício 6 - Criação de tic/toc
+--------------------------------
+6 a)
+~~~~
+Escrever a função `long tictoc(int mode)` para emular o tic/toc do Matlab.
+Porém, esta função tem dupla funcionalidade: se chamada com o argumento
+`mode` igual a 0 faz o reset de uma variável local de acordo com o estado atual 
+do relógio (e devolve zero); se `mode` for igual a 1, devolve o tempo que passou desde
+o último `tictoc(0)`.  Exemplo:
+
+[source,C]
+--------------------------------------------------------------
+	a=tictoc(0); // inicializa o contador e a variável "a" fica igual a zero (sem significado)
+	// o utilizador faz várias coisas...
+	// o utilizador faz mais coisas... :-)
+	a=titctoc(1); // a tem agora o tempo que passou desde o tictoc(0)
+--------------------------------------------------------------
+
+[NOTE]
+===================================================================
+Deve usar-se uma variável estática local na função tictoc()
+como ilustrado no código exemplo seguinte.
+===================================================================
+
+[source,C]
+--------------------------------------------------------------
+long tictoc(int mode)
+{
+    static struct timeval t1;  //variável t1 é estática (preserva o seu valor entre chamadas da função)
+    struct timeval t2;         //variável t2 não é estática. Usada para cálculo auxiliar.
+    long total;                //variável auxiliar para fazer um cálculo
+
+    if(mode==0) //tic atualiza t1 e retorna de imediato
+    {
+        gettimeofday(&t1, NULL); // o que faz?
+        return 0;
+    }
+    else        //toc - deve ler o tempo atual para t2 e fazer o cálculo dos microsegundos passados.
+    {
+        gettimeofday(&t2, NULL);
+        total=/*...*/ //vai usar os campos de t1 e t2 ( .tv_usec e .tv_sec) para fazer cálculos.
+        return total;
+    }
+}
+--------------------------------------------------------------
+
+Sugestão adicional: para obter a comodidade existente no
+Matlab, criar as seguintes definições no ficheiro `myf.h`.
+
+[source,C]
+--------------------------------------------------------------
+#define TIC tictoc(0)
+#define TOC tictoc(1)
+--------------------------------------------------------------
+
+Tendo estas definições, pode-se basta agora fazer 
+
+	TIC;
+
+ou 
+
+	a=TOC;
+
+para invocar as funções respetivas.
+
+
+6 b)
+~~~~
+
+Testar a função criada usando TIC, provocar um atraso de 500 us (com
+`usleep()`) e com TOC medir o tempo real que passou e comparar as diferenças
+imprimindo no ecran o valor devolvido por TOC. Esta ação deve ser
+feita criando a função: `void CompareDelays(long myusecs)` onde
+`myusecs` é o argumento, neste caso 500.
+[source,C]
+--------------------------------------------------------------
+void CompareDelays(long myusecs)
+{
+  long a;
+  TIC;
+  usleep( /*...*/);
+  a=TOC;
+  printf("Intended delay=...  Actual delay=... \n", /*...*/)
+}
+--------------------------------------------------------------
+
+6 c)
+~~~~
+
+Com o auxílio da função `tictoc()` escrever código para testar quanto tempo
+o computador leva a calcular um milhão senos de pi/3. Criar a função
+`void TestAmillionSins()`. A função `sin()` está em `math.h`. 
+A definição para indicar o valor de pi é `M_PI` (e também está
+definida em `math.h`)
+
+[source,C]
+--------------------------------------------------------------
+void TestAmillionSins()
+{
+  long a;
+  int n;
+  double x;
+  TIC;
+  for(n=0; n<1e6; n++)  
+  {
+    x=sin(M_PI/3);
+  }
+  /* ... */
+}
+--------------------------------------------------------------
+
+[NOTE]
+==================================================================
+As versões ANSI mais recentes da linguagem C (a partir do standard C99) já
+incluem o tipo de dados `_Complex`, donde o seguinte exercício tem uma
+utilidade meramente ilustrativa sobre estruturas de dados em C,
+porque se alguma vez se quiser fazer problemas com números complexos,
+recomenda-se o tipo de dados `_Complex` parte integrante do C.
+==================================================================
+
+Exercício 7 - Criação da estrutura `complexo`
+---------------------------------------------
+
+Criar uma estrutura de dados para representar números complexos
+baseada em dois campos do tipo `double`, e colocá-la no ficheiro
+de cabeçalho (`myf.h`):
+
+[source,C]
+-----------------------------------------------------------------
+typedef struct {double r,i;} complexo;
+-----------------------------------------------------------------
+
+Criar as seguintes funções no ficheiro myf.c
+
+	complexo AddComplex(complexo z1, complexo z2);
+	complexo MulComplex(complexo z1, complexo z2);
+	PrintComplex(complexo z);
+
+Testar as funções a partir do main() no ficheiro principal como
+descrito adiante. `AddComplex()` adiciona dois números complexos e
+`MulComplex()` dois números complexos. O resultado é um número complexo,
+e estas funções devem implementar as operações fundamentais para os cálculos.
+A função `PrintComplex()` deve imprimir no ecran o texto no formato
+`a+jb`  onde `a` é a perte real e `b` a parte imaginária do número
+`z` passado como argumento.
+
+[NOTE]
+================================================================================
+As duas primeiras funções retornam estruturas de dados inteiras (por valor).
+Embora válida, esta técnica não é a recomendada no caso geral
+sobretudo por questões de eficiência, como se referirá adiante.
+================================================================================
+
+[source,C]
+-----------------------------------------------------------------
+//...
+int main()
+{
+	//...
+	// Código exemplo para adicionar dois complexos
+	complexo z1, z2, z3;
+	z1.r=5; z1.i=3;
+	z2.r=10; z2.i=4;
+	z3=AddComplex(z1,z2);
+	PrintComplex(z3);
+	//...	
+
+}
+-----------------------------------------------------------------
+
+
+Exercício 8 - Passagem por valor e por referência
+-------------------------------------------------
+
+8 a)
+~~~~
+
+Criar uma função `SwapValues_()` para trocar o valor de duas variáveis
+passadas como argumento. Por exemplo, se x=5  e y=10 a invocação de
+`SwapValues_()` com os valores de x e y deverá ter como consequência
+que x passe a ter 10 e y passe a ter 5.
+Experimentar o código seguinte e verificar que NÃO funciona
+quando invocado de outra função! Ou seja, se invocarmos a função do main(),
+os valores de x e y não mudaram no main().
+
+[source,C]
+-----------------------------------------------------------------
+void SwapValues_( int a, int b)
+{
+	int c=a;
+	a=b;
+	b=c;
+}
+-----------------------------------------------------------------
+
+[source,C]
+-----------------------------------------------------------------
+int main()
+{
+        //...
+	int x=5, y=10;
+	SwapValues_(x,y);
+	printf("x=%d , y=%d\n", x,y);  // NÃO FUNCIONOU... porquê?
+	//...
+}
+-----------------------------------------------------------------
+
+Qual a explicação da falha? Qual a solução?
+	
+[TIP]
+===========================================================================
+Conceitos de passagem de parâmetros por valor e por referência; no
+primeiro, o parâmetro passado é o valor da variável (que fica intocada
+durante a passagem), no segundo é o **endereço** da variável que é
+passado e o valor da variável pode ser alterado pela função chamada. No
+primeiro caso há a vantagem de se preservar as variáveis de uma dada
+função que ficam a salvo, protegidas da ação de outras funções; no
+segundo caso, a vantagem é que a quantidade de informação a passar entre
+funções é menor e poupa recursos ao sistema na execução das funções.
+A passagem por referência tem uma vantagem adicional: pode ser usada
+para "retornar" resultados de operações como alternativa (ou
+complemento) ao valor que se pode devolve com o "return".
+O operador para lidar com endereço de uma varável é: `&` (endereço de),
+e o operador para indicar o conteúdo de um endereço é: `*` (conteúdo de).
+===========================================================================
+
+8 b)
+~~~~
+Corrigir a definição da função e criar `SwapValues()` abaixo para que funcione
+como esperado.
+
+[source,C]
+-----------------------------------------------------------------
+void SwapValues( int *a,  int *b)
+{
+	int c=(*a);  //Que significa? (os parêntesis são opcionais)
+	*a=*b;       //Que significa?
+	//... completar o código para terminar a função
+}
+
+//Alterações no main()
+int main()
+{
+	int x=5, y=10;
+	SwapValues(&x,&y);  // notar a diferença entre uma variável ou o seu endereço!
+	//...
+}
+-------------------------------------------------------------------
+
+
+Exercício 9 - Criação da estrutura `tempo` e funções de manipulação
+-----------------------------------------------------------------
+
+9 a)
+~~~~
+
+Criar em myf.h uma estrutura denominada `tempo` com três campos inteiros
+designados horas, minutos, segundos;
+
+Criar as seguintes funções dentro de myf.c:
+
+	int TempoParaSegundos( tempo *t);    //aceita um endereço para "tempo" e devolve inteiro
+	tempo SegundosParaTempo_( int segs); //aceita inteiro e devolve um "tempo"
+	void PrintTempo( tempo *t);          //imprime um tempo no formato HH:MM:SS
+
+
+[source,C]
+-----------------------------------------------------------------
+int TempoParaSegundos(tempo *t)
+{
+	//...
+//	s=(*t).segundos + (*t).minutos*60 + (*t).horas*3600;  //Esta formatação é anacrónica. NÃO USAR /!\
+	s=  t->segundos +   t->minutos*60 +   t->horas*3600;  //Esta formatação é a preferível!
+	// a operação campo do conteudo (* ). é substituida por um sinónimo ->
+	//...
+}
+
+tempo SegundosParaTempo_( int segs) //aceita inteiro e devolve um "tempo"
+{
+	//...
+	t.horas=(int)segs/3600;  //o modificador (int) é dispensável
+	t.minutos=//... ;
+	t.segundos=//... ;
+	//...
+}
+
+void PrintTempo( tempo *t)       /*imprime um tempo no formato HH:MM:SS*/
+{
+	printf("%02d:/*mais coisas*/", t->horas, /*mais coisas*/);
+}
+-----------------------------------------------------------------
+
+[TIP]
+===========================================================================
+O operador para aceder ao campo de uma estrutura é o ponto `.`; assim,
+o campo `segundos` da varável `t` é `t.segundos`. Porém, se `t` for
+um endereço, tem de se ler o seu conteúdo pelo operador `*`, ou
+seja `(*t)`, e portanto para obter o seu campo `segundos` é preciso
+escrever `(*t).segundos`. Porém, esta notação é demasiado extensa
+e até anacrónica. Usa-se em sua substituição  `t->segundos` . 
+
+===========================================================================
+
+Testar as funções do programa principal com o seguinte exemplo:
+
+[source,C]
+-----------------------------------------------------------------
+main()
+{
+	tempo t1, t2={10,20,30};     //declaração de t1 e t2 e inicialização de t2
+	int s;
+	s=TempoParaSegundos(&t2);
+	t1=SegundosParaTempo_(s);
+	
+	//as seguintes impressões no ecran devem dar o mesmo resultado!
+	//porquê?
+	PrintTempo( &t1);
+	PrintTempo( &t2);
+}
+-----------------------------------------------------------------
+
+
+9 b)
+~~~~
+
+Alterar o código da função anterior `SegundosParaTempo_()` e criar
+a função `SegundosParaTempo()` para que se tenha:
+
+	tempo * SegundosParaTempo(int segs); //aceita inteiro e devolve um endereço para "tempo"
+
+A nova função deve devolver o endereço de uma estrutura de tipo
+`tempo` e não a estrutura toda. Isso é fundamental em especial quando
+as estruturas de dados são muito grandes.
+Por exemplo numa imagem, retornar muitos megabytes é substituido pelo
+retorno de um endereço (apenas 8 bytes nas máquinas com CPUs de 64 bits).
+
+No entanto, esta função deve alocar memória para o efeito; na verdade
+requer uma reserva de memória ao sistema para aquela quantidade de
+dados. Usa-se em geral a função `malloc()` para requerer essa memória.
+Porém, essa memória alocada terá de ser libertada quando não for mais
+precisa ( uso da função `free()` ). Neste exemplo, isso será feito 
+dentro do main(). Por exemplo, temos o seguinte:
+
+[source,C]
+-----------------------------------------------------------------
+tempo * SegundosParaTempo(int segs)
+{
+	tempo *t=malloc(1000); //t é um endereço que aponta para uma região livre de 1000 bytes.
+	//...
+	//NB. 1000 bytes pode ser excessivo. Uma solução é alocar 
+	// o número mínimo possível, por exemplo com o comando:
+        // tempo *t=malloc(sizeof(tempo));
+
+	return t;
+}
+
+int main()
+{
+	//...
+	tempo *t3;       //declara-se um endereço (ponteiro) e que é uma variável especial
+	t3=SegundosParaTempo(1500);
+	PrintTempo(t3);  //t3 já é endereço, não é preciso o operador &
+	free(t3);        //t3 foi alocado por uma função fora do main. 
+                         //Agora deve ser libertado uma vez que não se usa mais
+
+	//...
+	return 0;
+}
+-----------------------------------------------------------------
+
+9 c)
+~~~~
+Comparar as soluções anteriores com uma terceira possível alternativa para a função:
+`void SegundosParaTempo__( int , tempo * )`. Esta função aceita dois
+parâmetros, e não retorna nada. O segundo parâmetro é um endereço que
+é passado do programa principal como por exemplo da seguinte forma:
+
+[source,C]
+-----------------------------------------------------------------
+void SegundosParaTempo__( int s, tempo *tt)
+{
+	tt->horas = s/3600;
+	//.....
+}
+
+int main()
+{
+//...
+	tempo t1;
+	SegundosParaTempo__(64000, & t1);  //converte 64000 segundos em HH, MM e SS
+	PrintTempo(& t1);
+//...
+}
+-----------------------------------------------------------------
+
+Quais as diferenças entre o código anterior e o seguinte?
+
+[source,C]
+-----------------------------------------------------------------
+int main()
+{
+//...
+	tempo *t1;
+	t1=malloc(sizeof(t1));
+	SegundosParaTempo__(64000, t1);  //converte 64000 segundos em HH, MM e SS
+	PrintTempo(t1);
+	free(t1);
+//...
+}
+
+-----------------------------------------------------------------
+
+

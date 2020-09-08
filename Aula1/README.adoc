@@ -233,9 +233,15 @@ inferiores a 10000 têm o algarismo 3.
 
 A resposta deve ser 561
 
-
-
 Exercício 3
+~~~~~~~~~~~
+Estender o exercício 2 de modo a:
+
+    . Imprimir todos os divisores calculados para os números não primos;
+    . Usar o package colorama para imprimir os números primos a verde;
+    . Usar _shebang line_ para simplificar execução do script;
+
+Exercício 4
 ~~~~~~~~~~~
 Calcular números perfeitos (aqueles cuja soma dos divisores igualam o número)
 como por exemplo 6 = 3 + 2 + 1.
@@ -271,14 +277,6 @@ if __name__ == "__main__":
     main()
 ----------------------------------
 
-Exercício 4
-~~~~~~~~~~~
-Estender o exercício 2 de modo a:
-
-    . Imprimir todos os divisores calculados para os números não primos;
-    . Usar o package colorama para imprimir os números primos a verde;
-    . Usar um argumento de linha de comandos para definir o número máximo a testar;
-    . Usar _shebang line_ para simplificar execução do script;
 
 
 // vim: set syntax=asciidoc:
