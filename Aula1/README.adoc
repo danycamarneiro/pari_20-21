@@ -145,6 +145,12 @@ avançadas, os diversos exercícios serão feitos por acréscimo sucessivo sobre
 base dos exercícios anteriores; nessa altura serão dadas as instruções nesse
 sentido.
 
+Os guiões para as aulas estarão a ser continuamente atualizados em:
+
+https://github.com/miguelriemoliveira/pari_20-21
+
+Recomenda-se que, sempre que possível, usem a versão online.
+
 Editor
 ~~~~~~
 A ferramenta principal para criar e modificar ficheiros é o editor, muitas
@@ -245,21 +251,12 @@ Exercício 4
 ~~~~~~~~~~~
 Calcular números perfeitos (aqueles cuja soma dos divisores igualam o número)
 como por exemplo 6 = 3 + 2 + 1.
-Além do `main()` criar as funções `getDividers()`
-que retorna uma lista dos divisores de um número e `isPerfect()`, que indica se o número é perfeito.
+Além do `main()` criar a função `isPerfect()`, que indica se o número é perfeito.
 
 .perfeitos.py
 [source,Python]
 ----------------------------------
 maximum_number = 100
-
-def getDividers(value):
-    dividers = []
-
-    # <Fill the blanks>
-
-    return dividers
-
 
 def isPerfect(value):
     # <Fill the blanks>

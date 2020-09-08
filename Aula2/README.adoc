@@ -41,6 +41,12 @@ as imagens e outros elementos multimédia no próprio ficheiro HTML, o que
 pode ser prático para efeitos de portabilidade do documento:
 `asciidoc -a data-uri SumarioA2.adoc`.
 
+Pode também visualizar diretamente os ficheiros adoc no github em
+
+https://github.com/miguelriemoliveira/pari_20-21
+
+ou usar um IDE (por exemplo o pycharm) para o fazer.
+
 =========================================================================
 
 Editor
