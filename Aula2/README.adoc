@@ -205,7 +205,7 @@ Exercício 4: Ciclos "for", "while" e input do terminal
 
 Escrever uma função `printAllPreviousChars()` que não tem parâmetros e não
 retorna nada, mas que quando executada lê um caractere do teclado
-usando a função `raw_input()` e imprime todos os
+usando a função https://pypi.org/project/readchar/[readchar] e imprime todos os
 caracteres desde o espaço ' ' até esse caractere, considerando a numeração de caracteres da http://www.asciitable.com/[tabela asccii].
 
 Completar o código fornecido com o código que falta.
