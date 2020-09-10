@@ -76,10 +76,10 @@ Criar as seguintes funções num script main.py:
 	printComplex(x);
 
 Testar as funções a partir do main() no ficheiro principal como
-descrito adiante. `AddComplex()` adiciona dois números complexos e
-`MulComplex()` dois números complexos. O resultado é um número complexo,
+descrito adiante. `addComplex()` adiciona dois números complexos e
+`multiplyComplex()` multiplica dois números complexos. O resultado é um número complexo,
 e estas funções devem implementar as operações fundamentais para os cálculos.
-A função `PrintComplex(x)` deve imprimir no ecran o texto no formato
+A função `printComplex(x)` deve imprimir no ecran o texto no formato
 `a+bi`  onde `a` é a perte real e `b` a parte imaginária do número
 `x` passado como argumento. As duas primeiras funções retornam tuplos de números complexos, e a última não retorna nada.
 
