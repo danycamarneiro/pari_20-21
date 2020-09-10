@@ -302,5 +302,3 @@ Reordene a lista da alínea 5 b) de modo a que esteja por ordem crescente do val
 
 O python tem uma functionalidade chamada https://www.pythonforbeginners.com/basics/list-comprehensions-in-python[list comprehension] que permite gerar a lista de números numa só linha de código. Veja o link e tente refazer a alínea 5 b) usando uma list comprehension.
 
-Reordene a lista da alínea 5 b) de modo a que esteja por ordem crescente do valor dos inputs.
-
