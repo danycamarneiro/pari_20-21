@@ -218,7 +218,6 @@ maximum_number = 50
 def isPrime(value):
     # <Fill the blank>
 
-
 def main():
     print("Starting to compute prime numbers up to " + str(maximum_number))
 

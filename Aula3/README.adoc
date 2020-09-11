@@ -158,7 +158,7 @@ if __name__ == '__main__':
 Exercício 4 - Utilização de classes
 -----------------------------------
 
-A utilização de _namedtuples_ pode ser vantajosa por comparação com muitoas outras abordagens. No entanto, no código desenvolvido no exercício 3 há ainda um ponto pouco claro. As funções respeitantes aos númeoros complexos estão isoladas. Claro, neste caso isto não é um grande problema visto que não há outras funções, mas imagine que tinha outras 50 funções dedicadas a outras tarefas. Quando assim é, importa organizar a informação e as funcionalidades em estruturas de dados que encapsulem um determinado assunto.
+A utilização de _namedtuples_ pode ser vantajosa por comparação com muitas outras abordagens. No entanto, no código desenvolvido no exercício 3 há ainda um ponto pouco claro. As funções respeitantes aos números complexos estão isoladas. Claro, neste caso isto não é um grande problema visto que não há outras funções, mas imagine que tinha outras 50 funções dedicadas a outras tarefas. Quando assim é, importa organizar a informação e as funcionalidades em estruturas de dados que encapsulem um determinado assunto.
 
 As classes são a componente principal da programação orientada a objetos.
 Ver informação sobre https://www.w3schools.com/python/python_classes.asp[classes em python]
