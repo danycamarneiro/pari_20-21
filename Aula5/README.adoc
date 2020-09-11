@@ -11,201 +11,294 @@ Miguel Riem Oliveira <mriem@ua.pt>
 .Sumário
 -------------------------------------------------------------
 Introdução ao OpenCV.
-Apresentação e discussão da metodologia dos Projetos Finais.
 -------------------------------------------------------------
 
 O opencv é uma biblioteca muito poderosa para fazer processamento de imagem e visão artificial, entre outras funcionalidades. A partir da versão 3 orientou-se
 especialmente para programação em C{plus}{plus} e Python.
 
+Instalação
+----------
+
+Para instalar o opencv com os bindings em python usar o comando:
+
+   sudo apt-get install python-opencv
+
+Mais informação em https://docs.opencv.org/master/d2/de6/tutorial_py_setup_in_ubuntu.html
+
+Para saber a versão instalada do opencv pode, num terminal python (estamos a usar o python 2.7) fazer:
+
+    import cv2
+    cv2.__version__
+
+Exercício 1 - Leitura de imagens
+--------------------------------
+
+As imagens para teste estão presentes na pasta docs da pasta desta aula.
+
+1 a)
+~~~~~
+
+Implemente o seguinte código para leitura e display de uma image usando o opencv. Mais informação neste https://docs.opencv.org/3.1.0/dc/d2e/tutorial_py_image_display.html[tutorial].
+
+[source,Python]
+-----------------------------------------------------------------
+import cv2
+
+def main():
+
+    image_filename = 'path to my image .png'
+    image = cv2.imread(image_filename, cv2.IMREAD_COLOR) # Load an image
+
+    cv2.imshow('window', image)  # Display the image
+    cv2.waitKey(0) # wait for a key press before proceeding
 
 
-Exercício 1 - Introdução ao OpenCV
----------------------------------
+if __name__ == '__main__':
+    main()
+-----------------------------------------------------------------
 
+1 b)
+~~~~~
 
+Adicione a funcionalidade de inserir o nome (full path) da imagem a ler. Experimente ler as imagens dos dois atlascars (atlascar.png e atlascar2.png).
 
-6 a)
+[TIP]
+====================
+Use o package argparser
+====================
+
+1 c)
+~~~~~
+
+Altere o script de modo a que o programa mostre alternadamente os dois atlascars na mesma janela. A mudança de carro mostrado deve dar-se a cada 3 segundos.
+
+[TIP]
+====================
+O primeiro argumento da função _cvWaitKey_ é o número máximo de milisegundos a esperar por uma tecla.
+
+Em alternativa pode usar a função https://www.datacamp.com/community/tutorials/python-time-sleep?utm_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=332602034352&utm_targetid=dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1011706&gclid=Cj0KCQjwwOz6BRCgARIsAKEG4FVkKPOEdKcj7_vQ9aU-6TrPIhvgDYeR_3WXZsgRAOPOHLIDb_abi3IaAgAEEALw_wcB[sleep do package time].
+====================
+
+Exercício 2 - Processamento de imagem
+-------------------------------------
+
+2 a)
 ~~~~
 
-Instalar o openCV no computador.
-As packages principais recomendadas:
+Carregue uma imagem do atlascar e binarize-a usando a função:
 
-  sudo apt install libopencv-dev     #(instala automaticamente as dependências)
-  sduo apt install opencv-doc	
+[source,Python]
+----------------
+retval, image_thresholded = cv2.threshold(image_gray, 128, 255, cv2.THRESH_BINARY)
+----------------
 
-A versão disponível nos repositórios do Ubuntu (18.04) será possivelmente
-a versão 3.2.0 (http://opencv.org/opencv-3-2.html).
-
-Para verificar qual a versão que está instalada no computador pode-se usar:
-  
-  pkg-config --modversion opencv
-
-ou então:
-
-  dpkg -l | grep libopencv-dev
+[TIP]
+====================
+Todas as funções do opencv estão documentadas em https://docs.opencv.org/master/index.html
+====================
 
 
-6 b)
+.Resultado esperado
+[caption=""]
+image::docs/atlascar2_thresholded.png[]
+
+2 b)
 ~~~~
 
-Testar o código abaixo em openCV tendo atenção às variáveis 
-globais nele presentes, e a outras definições.
+Nos bindings para opencv de python, as imagens são representadas por numpy nd arrays, que são arrays n-dimensionais. Para imagens de 640x480 de cor, por exemplo, os arrays terão o tamanho 480 (linhas) x 640 (colunas) x 3 (canais de cor).
 
-O programa espera encontrar o ficheiro `baboon.jpg`
-no diretório corrente, mas pode-se usar uma qualquer outra imagem
-e, da forma como está o programa, o nome da imagem pode ser passado
-na linha de comando.
+[TIP]
+====================
+Pode imprimir o tipo do uma qualquer variável em python usando a função type:
 
-[source,C]
-.Código no ficheiro main.c
---------------------------
-#include <stdio.h>
-#include "myf.h"
+    print(type(image))
 
-/*Global variables */
-int       bin_limitG = 128;                       //initial bin limit
-IplImage *src_imageG = NULL, *dst_imageG = NULL;  //notice that they are NULL (not yet initialized)
+Para ver o tamanho de um numpy array use:
 
-int main(int argc, char *argv[])
-{
-//Ex. 4
-#if 1
-	const char *file_name;
+    print(image.shape)
 
-	if( argc > 1) file_name = argv[1];    //if you have arguments use first one as the image file name
-	else          file_name = "baboon.jpg";  //else use a default (must be in local dir)
+Para ver o tipo de dados (data type) dos elementos do numpy ndarray use:
 
-	FirstCvTest(file_name);
+    print(image.dtype)
+====================
 
-#endif
-}
---------------------------
+https://numpy.org/[Numpy] é uma biblioteca python muito eficiente para cálculo matricial (daí ter sido usada pelos bindings para python em opencv). O numpy é semelhante ao matlab na síntaxe e forma de operar matricial.
 
+Assim, pode fazer alterações às imagens operando-as como se fossem matrizes em numpy. Sendo _image_ uma variável do tipo numpy ndarray, pode simplesmete usar uma comparação:
 
-[source,C]
-.Código no ficheiro header (myf.h)
-----------------------------------
+    image_thresholded = image > 128
 
-#include <opencv2/core/core_c.h>          //core functionalities
-#include <opencv2/videoio/videoio_c.h>    //for image aquisition
-#include <opencv2/highgui/highgui_c.h>    //for GUI functions
+Substitua a alínea _2 a)_ de modo a fazer a binarização usando o operador numpy ndarray. Deverá ter o mesmo resultado.
 
-/* Some commmon definitions*/
-#define NAME_IMG_ORG "ImagemOriginal"
-#define NAME_IMG_PRC "ImagemProcessada"
+[TIP]
+====================
+Veja qual o tipo de dados de saída da _image_threshold_ quando usa a função do opencv e quando usa o operador numpy.
+====================
 
-#include "prototypes.h"
-----------------------------------
-
-[source,C]
-.Código no ficheiro das funções (myf.c)
-----------------------------------------------------------------------
-#include "myf.h"
-
-//Variáveis globais (externas)
-extern int       bin_limitG;
-extern IplImage *src_imageG, *dst_imageG;
-
-int FirstCvTest( const char *f_name)
-{
-        src_imageG = cvLoadImage(f_name, 0);       /*0 for gray, -1 for color */
-
-        if(!src_imageG)
-        {
-                printf("Image was not loaded.\n");
-                return -1;
-        }
-
-        dst_imageG = cvCloneImage(src_imageG);  //create a copy of the image
-
-        cvNamedWindow(NAME_IMG_ORG, 0);   //create a window for original image
-        cvNamedWindow(NAME_IMG_PRC, 0);   //create a window for processed image
-
-        cvCreateTrackbar("Threshold", NAME_IMG_PRC, &bin_limitG, 255, ProcessImage);  //create a trackbar to change a parameter
-        cvShowImage(NAME_IMG_ORG, src_imageG);                                      //Show the image in created window
-
-        ProcessImage(0);  //to show the first image (the argument is dummy and ignored)
-
-        cvWaitKey(0); //wait for a key to be pressed
-
-        cvReleaseImage(&src_imageG);  //free image memory space
-        cvReleaseImage(&dst_imageG);  //free image memory space
-
-        return 0;
-
-}
-
-
-
-image::images/ex6b.png[alt="Casas Costa Nova"]
-
-
-Exercício 7 - Figura geométrica sobre uma imagem
-------------------------------------------------
-
-7 a)
+2 c)
 ~~~~
+Utilize a função cv2.split() para separar a imagem _atlascar2.png_ nos seus três canais de cor (b,g,r). Cada canal deverá ser binarizado usando diferentes limites de binarização (b=50,g=100,r=150). Posteriormente, as imagens binarizadas de cada canal deverão ser concatenadas (cv2.merge) para formar uma nova imagem RGB, a mostrar numa janela.
 
-Alterar a função anterior para que, sobre a imagem binarizada,
-se desenhe adicionalmente uma circunferência de raio igual ao limiar de binarização instantâneo 
-(dado pela barra horizontal)
-A função em opencv para o fazer é `cvCircle()`
-e eis uma sugestão de parâmetros para este programa:
+.Resultado esperado
+[caption=""]
+image::docs/atlascar2_multichannel_thresholded.png[]
 
-  cvCircle(dst_imageG, cvPoint(dst_imageG->width/2,dst_imageG->height/2 ), bin_limitG, CV_RGB(255,0,0),5,8,0);
-
-image::images/ex7a.png[alt="Binariazada com circunferencia"]
-
-7 b)
-~~~~
-
-Alterar o código anterior para que a cor da circunferência passe a ser clara, CV_RGB(255,255,255),
-quanfo o limiar de binarização for maior que 180 e fique escura, CV_RGB(255,0,0), em
-caso contrário. Sugestão: criar uma variável do tipo `CvScalar cor=...` para usar em vez
-da macro `CV_RGB()`.
-
-
-7 c)
+2 d)
 ~~~
 
-Alterar a função de processamento para efeturar um detetor de arestas de Canny.
-A função a usar é `cvCanny()`. Pode-se usar o valor de `bin_limitG` como um dos limiares
-de Canny (na imagem exmeplo usou-se o dobro de `bin_limitG`.
+Leia a imagem _atlas2000_e_atlasmv.png_.
 
-image::images/ex7c.png[alt="Canny"]
+Usando a função _cv2.inRange_ crie uma máscara dos pixeis com valores de rgb entre (bmin, gmin, rmin) e (bmax, gmax, rmax). Parametrize de modod a segmentar o caixote verde por trás dos robôs.
 
-Nota: a imagem a processar elo operador de Canny não pode ser a cores (só pode ter um canal).
+.Resultado esperado
+[caption=""]
+image::images/atlas2000_e_atlasmv_green_segmentation.png[]
+
+[TIP]
+====================
+Se mostrar a imagem original com o imshow pode depois colocar o rato sobre a zona do caixote para inspeccionar o valor típico dos pixeis naquele objeto.
+====================
+
+2 e)
+~~~
+
+Faça a segmentação do mesmo objeto (cor verde) desta vez usando o modelo de cor HSV. O resultado deve ser o mesmo que na alínea anterior.
+
+[TIP]
+====================
+Para converter de BGR para HSV
+[source,Python]
+----------------
+mask = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+----------------
+====================
+
+2 f)
+~~~
+
+Usando uma adição da imagem original por um escalar para cada canal, pinte de vermelho o caixote verde detetado na alínea anterior.
+
+.Um resultado possível
+[caption=""]
+image::images/atlas2000_e_atlasmv_green_box_highlighted.png[]
 
 
-Exercício 8 - Definição conditional de variáveis globais
----------------------------------------------------------
+Exercício 3 - Graphical user interface
+--------------------------------------
 
-Incluir as definições globais (Variáveis globais, etc.)
-na header file (myf.h) e distinguir a definição da declaração
-como externa com definições condicionais de `#ifdef`.
-Na myf.h fazer algo do género:
+As graphical user interfaces são, como o nome indica, ferramentas de interação com o utilizador. São muito úteis como alternativa à inserção de texto no terminal.
 
-[source,C]
-----------------------------------------------------------
+3 a)
+~~~~
+Partindo do _exercício 2 a)_ implemente uma trackbar que permita ao utilizadore definir o limite de binarização a ser utilizado na binarização.
 
-#include <opencv2/core/core_c.h>          //core functionalities
-#include <opencv2/videoio/videoio_c.h>    //for image aquisition
-#include <opencv2/highgui/highgui_c.h>    //for GUI functions
+Ver instruções sobre https://docs.opencv.org/3.4/da/d6a/tutorial_trackbar.html[trackbars em opencv].
 
-#ifdef _MAIN_C_
-	int bin_limitG = 128;
-	IplImage *src_imageG = NULL, *dst_imageG = NULL;
-#else
-	extern int bin_limitG;
-	extern IplImage *src_imageG, *dst_imageG;
-#endif
+[source,Python]
+-----------------------------------------------------------------
+import argparse
+import cv2
 
-#define NAME_IMG_ORG "ImagemOriginal"
-#define NAME_IMG_PRC "ImagemProcessada"
+# Global variables
+window_name = 'window - Ex3a'
+image_gray = None
 
-#include "prototypes.h"
-----------------------------------------------------------
 
-Estas alterações vão obrigar a aguns `#defines` dentro
-dos ficheiros source... quais e em que lugares?
+def onTrackbar(threshold):
+    # Add code here to threshold image_gray and show image in window
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--image', type=str, required=True,help='Full path to image file.')
+    args = vars(parser.parse_args())
+
+    image = cv2.imread(args['image'], cv2.IMREAD_COLOR)  # Load an image
+    global image_gray # use global var
+    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # convert bgr to gray image (single channel)
+    cv2.namedWindow(window_name)
+
+    # add code to create the trackbar ...
+    cv2.waitKey(0)
+
+if __name__ == '__main__':
+    main()
+-----------------------------------------------------------------
+
+3 b)
+~~~~
+
+Apesar de funcional, o Exercício _3 a)_ tem o problema de necessitar de variáveis globais, que o são por terem de ser acedidas quer pela função _main_ quer pela função _onTrackbar_. Ler mais aqui sobre o https://www.datacamp.com/community/tutorials/scope-of-variables-python?utm_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=229765585186&utm_targetid=dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1011706&gclid=Cj0KCQjwwOz6BRCgARIsAKEG4FXVGtlBHc6VmZN0XsQ4s1jVjldG5sOlV50Od66LKdXOulnWYa190AAaAgxlEALw_wcB[scope de variáveis]
+
+As variáveis globais não são recomendadas por terem https://www.reddit.com/r/Python/comments/25jzga/what_exactly_makes_global_variables_so_bad/[vários problemas].
+
+Altere o _Ex 3 a)_ de modo a não utilizar variáveis globais.
+
+[TIP]
+====================
+Será necessário que a função receba como argumentos todas as variáveis de que necesita. Ver as funcionalidades da função https://docs.python.org/2/library/functools.html#partial-objects[partial].
+====================
+
+3 c)
+~~~~
+
+Partindo do _Ex3 b)_ e usando a funçao https://docs.opencv.org/2.4/modules/highgui/doc/user_interface.html?highlight=setmousecallback#setmousecallback[setMouseCallback] acrescente a funcionalidade de imprimir as coordenadas do rato sempre que se pressiona o botão esquerdo do rato.
+
+3 d)
+~~~~
+
+Implemente um programa que permite configurar leia uma imagem e a converta para HSV. Depois a imagem deverá ser mostrada com seis trackbars
+
+Exercício 4 - Anotações em imagens
+----------------------------------
+
+Por vezes é importante desenhar informação em cima de uma imagem, seja texto, figuras ou outros gráficos. O opencv disponibiliza várias funções para o efeito.
+
+4 a)
+~~~~
+
+Carregue a imagem atlascar.png e desenhe um círculo no seu centro com a função _cv2.circle_.
+
+4 b)
+~~~~
+
+Adicione o texto 'PARI' à imagem a vermelho usando a funçao _cv2.putText()_
+
+Exercício 5 - Aquisição de video
+--------------------------------
+
+O opencv também tem várias funções para lidar com vídeo. Ver https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html[estes tutoriais].
+
+[WARNING]
+====================
+Naturalmente só conseguirá ter acesso às imagens de uma câmara se o seu portátil tiver alguma com os drivers corretamente instalados. Normalmente a utilização de máquinas virtuais não permite a utilização de câmara. Pode também inserir uma câmara USB e tentar visualizá-la. Pode usar o software cheese para tentar primeiro perceber se a https://smallbusiness.chron.com/webcam-working-ubuntu-66873.html[câmara está a funcionar corretamente].
+====================
+
+5 a)
+~~~~
+Implemente um programa que faça a aquisição de uma imagem da câmara e depois faça o seu display.
+
+[source,Python]
+-----------------------------------------------------------------
+#!/usr/bin/env python
+import cv2
+
+def main():
+    # initial setup
+    capture = cv2.VideoCapture(0)
+    window_name = 'A5-Ex5'
+    cv2.namedWindow(window_name,cv2.WINDOW_AUTOSIZE)
+
+    _, image = capture.read()  # get an image from the camera
+
+    # add code to show camera
+    # add code to wait for a key press
+
+if __name__ == '__main__':
+    main()
+
+-----------------------------------------------------------------
+
+5 b)
+~~~~
+Adapte o exerćicio anterior de modo a implementar um programa que faça a aquisição e display contínuos da imagem da câmara do seu portátil.
 
