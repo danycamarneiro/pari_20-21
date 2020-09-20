@@ -1,0 +1,61 @@
+= Aula 8 - PARI
+
+Miguel Riem Oliveira <mriem@ua.pt>
+2020-2021
+
+// Instruções especiais para o asciidoc usar icons no output
+:icons: html5
+:iconsdir: /etc/asciidoc/images/icons
+
+.Sumário
+-------------------------------------------------------------
+Comunicações TCP-IP
+Introdução ao Robot Operating System (ROS)
+-------------------------------------------------------------
+
+Os sistemas robóticos são muito frequentemente sistemas complexos.
+Isto leva a que o desenvolvimento de um programa que cubra todas as funcionalidades necessárias seja uma tarefa longa e complicada.
+
+Mais ainda, a utilização de um programa único cria dependências desnecessárias e indesejáveis entre funcionalidades, mesmo em programas organizados em multíplos ficheiros.
+A solução mais elegante para contruir programas complexos é ... não o fazer.
+
+De fato, o melhor é manter os programas desenvolvidos simples e focados no menor número de funcionalidades possível.
+No entanto, isto implica que estes programas sejam capazes de comunicar entre si.
+
+Neste contexto, a comunicação entre programas torna-se um elemento fundamental no desenvolvimento de sistemas robóticos avançados.
+
+O Robot Operating System (ROS) é um conjunto de bibliotecas e ferramentas _open source_ concebidas para facilitar o
+desenvolvimento de programas para robôs. Uma das grandes vantagens do ROS é a forma como facilita a comunicação entre diferentes programas (nós).
+
+Exercício 1 - Porquê o ROS?
+---------------------------
+
+Implemente este exemplo de https://stackabuse.com/basic-socket-programming-in-python/[comunicação TCP-IP] pura (não baseado em ROS).
+
+Neste exemplo, a comunicação ocorre entre um _programa servidor_ e um _programa cliente_.
+
+O paper
+
+[source,Python]
+-----------------------------------------------------------------
+#!/usr/bin/env python
+
+import socket
+HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    conn, addr = s.accept()
+    with conn:
+        print('Connected by', addr)
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.sendall(data)
+-----------------------------------------------------------------
+
+https://realpython.com/python-sockets/
+
