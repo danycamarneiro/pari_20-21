@@ -1,0 +1,24 @@
+# Projeto em Automação e Robótica Industrial
+
+**Miguel Riem Oliveira**
+
+**Departamento de Engenharia Mecânica**
+
+**Universidade de Aveiro**
+
+2020-2021
+
+image::docs/intro_image.png[]
+
+## Informações
+
+Alguns conselhos ou informações soltos:
+
+   . Toda a documentação referente às aulas estará colocada neste repositório.
+
+   . A maioria das aulas está já disponibilizada.
+   
+   . Utilize sempre a visualização do README.adoc de modo a utilizar sempre a última versão do guião.
+
+   . Entre nas pastas de cada aula para ver os guiões.
+
