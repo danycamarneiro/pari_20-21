@@ -1,4 +1,4 @@
-Aula 1 - PARI
+Parte 1 - PARI
 =============
 Miguel Riem Oliveira <mriem@ua.pt>
 2020-2021
