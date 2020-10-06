@@ -12,7 +12,6 @@ Miguel Riem Oliveira <mriem@ua.pt>
 Introdução
     Apresentação
     Objetivos
-    Programa
     Avaliação
 Introdução ao Linux - A shell
 Alguns comandos básicos
@@ -39,7 +38,7 @@ operativos (Windows, MacOS). As mais interessantes são:
 
   . Uso do live ubuntu: https://tutorials.ubuntu.com/tutorial/try-ubuntu-before-you-install[Try before you install]
   . Instalar uma máquina virtual (`virtualbox` ou outra) e instalar o Linux na máquina virtual.
-  . Instalar o Linux em dual-boot com o Windows (Esta é a forma recomendada. As outras formas serão pouco adequadas em breve).
+  . Instalar o Linux em dual-boot com o Windows (**Esta é a forma recomendada. As outras formas serão pouco adequadas em breve**).
 
 As duas primeiras soluções não interferem no disco nem no sistema operativo
 existente, mas são mais limitadas em termos de funcionalidades e desempenho.
@@ -65,59 +64,6 @@ Mais informações podem ser obtidas por exemplo nos seguintes endereços:
   * https://tutorials.ubuntu.com/
   * https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop
 
-Notas iniciais sobre os ficheiros de apoio às aulas
----------------------------------------------------
-
-[NOTE]
-.Transformar os ficheiros de Sumários e Exercícios de ASCIIDOC para HTML
-Estes ficheiros de Sumários são legíveis no formato ASCII, mas podem
-ser convertidos em HTML para uma melhor apresentação usando
-o comando `asciidoc`. Este comando pode ser instalado no Ubuntu com
-`sudo apt install asciidoc` bastando depois executar na linha de comando
-`asciidoc SumarioA1.adoc`, ou seja, num terminal (que é uma janela onde se escrevem
-comandos manualmente --- essa janela pode ser lançada a partir da interface gráfica
-do linux a partir da zona das aplicações). NOTA: Antes de fazer instalações pode
-ser necessário atualizar as fontes dos repositórios; isso faz-se com `sudo apt update`.
-Para fazer o `syntax highlight` do código de programação incluído neste ficheiro o programa
-recorre a comandos externos. O de defeito é o `source-highlight` e que se se
-deve instalar previamente, por exemplo, com o comando `sudo apt install source-highlight`.
-
-Como exercício, sugere-se tentar criar o ficheiro em formato HTML (++SumarioA1.html++)
-a partir do ficheiro em formato asciidoc (++SumarioA1.adoc++).
-
-[NOTE]
-.Transformar os ficheiros de Sumários e Exercícios de ASCIIDOC para PDF
-Os documentos em formato ASCIIDOC também podem ser convertidos em PDF recorrendo ao comando `a2x`,
-que é uma forma elaborada de usar o `asciidoc` e outras
-packages auxiliares como o `dblatex` (por defeito) ou o `FOP` para gerar outros
-formatos (dos quais o PDF é o de defeito).
-Para serem usados, estes comandos também devem ser instalados: `sudo apt install dblatex fop`.
-Depois, nesse caso, bastará fazer `a2x SumarioA1.adoc` ou `a2x --fop SumarioA1.adoc` respetivamente.
-Qualquer destes comandos tem opções na linha de comando que os tornam configuráveis.
-O `dblatex` pode ter problemas com ficheiros com caracteres especiais (por
-exemplo UTF-8) e isso tem de ser prevenido para executar sem erros. Por vezes
-isso torna-se complexo e a opção `a2x --fop SumarioA1.adoc` acaba por ser a mais
-cómoda.
-
-
-[WARNING]
-.Nomes das linguagens para o _syntax highlight_ e o formato PDF
-Quando se gera o documento em PDF, pode haver conflitos de nomes nas linguagens
-para o _syntax highlight_. Um desses casos é a linguagem de `makefile` que é
-reconhecida pelo `source-highlight` mas não pelo `highlight` nem pelo `pygments` 
-que ainda por cima disso espera `c` e não `C` para código fonte em linguagem C.
-Esta questão alarga-se quando se usa o comando `a2x` para gerar PDF porque
-ele recorre ao `dblatex` que tem o seu próprio `syntax highlight` para gerar PDF
-e não reconhece a linguagem `makefile` mas sim `make` (embora pobre!). 
-Nesse caso, e se se pretende criar o PDF, ou se usa a variante `a2x --fop`,
-que não faz qualquer `syntax highlight`, ou então usa-se o `a2x` de defeito (`dblatex`),
-e altera-se o tipo de linguagem _source_ de `makefile` para `make`; porém
-aí é o `asciidoc` que não funcionará bem se não se usar o `source-highlighter`.
-A questão pode-se tornar confusa e há, portanto, uma questão de compromissos. O `syntax highlight` gerado
-pelo `source-highlight` é em geral mais rico que os outros, portanto recomenda-se.
-Se for para gerar PDF, ou se abdica do `syntax highlight` (usando a2x --fop) 
-ou se ajusta as linguagens (mormente de `makefile` para `make`) e usa-se
-o `dblatex`, que é o processador de defeito do `a2x`.
 
 
 Parte 1 - Apresentação e generalidades
