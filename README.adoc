@@ -14,7 +14,7 @@
 //|Header 1 |Header 2 |Header 3
 
 |image:docs/VideosLAR1.gif[]   https://github.com/lardemua/atlascar2[Projeto AtlasCar]
-|image:docs/MVI_3502.gif[width=180]   https://www.project-race.eu/[Projecto RACE]
+|image:docs/MVI_3502.gif[]   https://www.project-race.eu/[Projecto RACE]
 |image:docs/iros2014_final_mpeg4.gif[]   https://www.iros2020.org/[IROS 2014]
 
 |image:docs/set_initial_estimate.gif[width=235] https://github.com/lardemua/atlascar2[AtlasCar2]
