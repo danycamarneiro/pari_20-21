@@ -10,6 +10,9 @@
 
 
 [cols="^.^,^.^,^.^", options="header"]
+[cols="^.^,^.^,^.^", options="header"]
+[cols="^.^,^.^,^.^", options="header"]
+[cols="^.^,^.^,^.^", options="header"]
 |===
 //|Header 1 |Header 2 |Header 3
 
