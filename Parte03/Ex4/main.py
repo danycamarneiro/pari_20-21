@@ -21,6 +21,7 @@ class Complex:
 
     def __init__(self, r, i):
         self.r = r
+        real = r
         self.i = i
 
     def __str__(self):
