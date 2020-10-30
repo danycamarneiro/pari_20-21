@@ -79,4 +79,25 @@ if __name__ == '__main__':
 ~~~~
 Adapte o exercício anterior de modo a implementar um programa que faça a aquisição e display contínuos da imagem da câmara do seu portátil.
 
+Exercício 3 - Are you speaking?
+------------------------------
 
+Este exercício pretende que seja desenvolvido um programa mais complexo.
+
+3 a)
+~~~~
+
+Pretende-se desenvolver uma aplicação em python opencv que seja capaz de detetar
+caras num stream de video. A face detetada deve ser destacada na imagem mostrada, ficando mais esverdeada.
+
+3 b)
+~~~~
+
+Nas regiões da imagem que não estão incluídas pela cara detetada, pretende-se detetar arestas e destacá-las avermelhando-as na imagem mostrada.
+
+3 c)
+~~~~
+
+Finalmente, pretende-se que o programa seja capaz de perceber se a pessoa está a falar ou não.
+
+Esta classificação deve ser mostrada escrevendo texto na imagem mostrada.
