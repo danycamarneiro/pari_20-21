@@ -100,4 +100,6 @@ Nas regiões da imagem que não estão incluídas pela cara detetada, pretende-s
 
 Finalmente, pretende-se que o programa seja capaz de perceber se a pessoa está a falar ou não.
 
-Esta classificação deve ser mostrada escrevendo texto na imagem mostrada.
+Esta classificação deve ser comunicada escrevendo texto na imagem mostrada.
+
+Podem ver um vídeo da aplicação https://youtu.be/eMmuuiV5KGQ[aqui].
