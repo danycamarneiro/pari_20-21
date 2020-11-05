@@ -27,7 +27,7 @@ Segmentação de cor - color_segmenter.py
 
 O programa **color_segmenter.py** servirá para configurar os parâmetros da deteção de cor que serão depois utilizados pelo **ar_paint.py**. O **color_segmenter.py** deve receber imagens continuamente da câmara do portátil. Depois, essas imagems são processadas de modo a segmentar os pixeis cuja cor esteja entre os limites mínimo e máximo de R,G e B establecidos.
 
-A aplicação deve ter 6 _trackbars_ que permitam alterar esses limites, e o programa deverá, quando se alteram aqueles valores, responder de imediato o resultado da segmentação usando os novos limites.
+A aplicação deve ter 6 _trackbars_ que permitam alterar esses limites, e o programa deverá, quando se alteram aqueles valores, mostrar de imediato o resultado da segmentação usando os novos limites.
 
 Quando o utilizador estiver satisfeito com os valores indicados, pressiona a tecla "w" (write) para indicar que quer guardar os limites establecidos. O programa deve gravar esses limites num ficheiro json denominado _limits.json_ (colocado na diretoria local) com o seguinte formato:
 
@@ -42,7 +42,7 @@ O utilizador pode ainda usar a tecla "q" (quit) para indicar que quer terminar o
 
 [TIP]
 ============================================
-Para facilitar a deteção de cor recomenda-se a utilização de um telemóvel com o programa https://play.google.com/store/apps/details?id=com.nekobukiya.screenlight&hl=pt_PT[full screen color light] (ou semelhante) que permite colocar uma cor no ecrã do telemóvel. Por usar o ecrã do telemóvel virado para a câmara do portátil.
+Para facilitar a deteção de cor recomenda-se a utilização de um telemóvel com o programa https://play.google.com/store/apps/details?id=com.nekobukiya.screenlight&hl=pt_PT[full screen color light] (ou semelhante) que permite colocar uma cor no ecrã do telemóvel, e depois virá-lo para a câmara do portátil.
 
 Escolha uma cor a colocar e depois configure a segmentação de cor para detetar essa cor.
 ============================================
