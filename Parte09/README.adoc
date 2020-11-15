@@ -12,8 +12,6 @@ Miguel Riem Oliveira <mriem@ua.pt>
 Configuração de nós em ROS - nomes e parâmetros
 Ficheiros ros launch
 Ficheiros de log em ros
-
-
 -------------------------------------------------------------
 
 Exercício 1 - Remapeamento de nomes
