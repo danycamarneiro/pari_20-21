@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pari_aula8_ex4_A)
+project(pari_aula8_ex4_a)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -103,7 +103,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES pari_aula8_ex4_A
+#  LIBRARIES pari_aula8_ex4_a
 #  CATKIN_DEPENDS rospy std_msgs
  DEPENDS system_lib message_runtime
 )
@@ -121,7 +121,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/pari_aula8_ex4_A.cpp
+#   src/${PROJECT_NAME}/pari_aula8_ex4_a.cpp
 # )
 
 ## Add cmake target dependencies of the library
