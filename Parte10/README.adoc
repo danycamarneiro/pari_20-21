@@ -258,3 +258,23 @@ Ex 7 b)
 ~~~~~~
 Crie um nó ROS que subscreva as mensagens com as nuvens de pontos, e que publique uma nuvem de pontos que seja uma amostragem da nuvem original.
 
+Exercício 8 - Visualization Msgs do RViz
+----------------------------------------
+
+O RViz permite a visualização de dados contidos em mensagens ROS. Muitas destas mensagens contêm dados sensoriais, como vimos em exercícios anteriores.
+
+No entanto também é possível publicar mensagens do tipo http://wiki.ros.org/rviz/DisplayTypes/Marker[Marker] que são mensagens especiais
+contidas no package https://wiki.ros.org/rviz/Tutorials[visualization_msgs] e que permitem desenhar objetos no RViz.
+
+Mais informação nestes https://wiki.ros.org/rviz/Tutorials[tutoriais para RViz].
+
+Crie um nó que publique três _Marker_, uma esfera esverdeada semi-transparente com um cubo vermelho opaco no seu centro, e um texto perto destas formas a indicar o raio da esfera.
+
+Exercício 9 - Clustering the dados Lidar2D
+------------------------------------------
+
+Implemente um nó ROS que receba mensagens _LaserScan_ e faça o clustering dos vários objetos presentes no scan do lidar.
+
+Para fazer o clustering pode usar deteção de variações "grandes o suficiente" entre medições vizinhas (em termos angulares).
+
+Posteriormente, publique um marcador RViz (ou um array de marcadores) que contenha cada cluster com uma cor determinada.
