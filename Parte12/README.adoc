@@ -730,7 +730,7 @@ Assim, pretende-se transformar o ficheiro _player.gazebo.xacro_ numa http://wiki
 -----------------------------------------------------------------
 
 
-Exercício 8 - Utilização de um Controlador ROS
+Exercício 9 - Utilização de um Controlador ROS
 ----------------------------------------------
 
 O controlador utilizado no exercício anterior é o controlador do Gazebo. Utiliza a biblioteca
